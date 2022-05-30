@@ -1,31 +1,44 @@
 import React from "react";
-import { View, StyleSheet, Button } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StyleSheet, Button } from "react-native";
+
 import * as Yup from "yup";
 
 import Screen from "../components/Screen";
-import AppText from "../components/AppText";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 
 const validationSchema = Yup.object().shape({
+  name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(4).label("Password"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords don't match!")
+    .required()
+    .label("Password"),
 });
 
-function LoginScreen() {
+function RegisterScreen() {
   return (
     <Screen style={styles.container}>
-      <MaterialCommunityIcons
-        name="food-off-outline"
-        size={100}
-        color={"black"}
-      />
-      <AppText>Bon Appetit</AppText>
       <AppForm
-        initialValues={{ email: "", password: "" }}
+        initialValues={{
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        }}
         onSubmit={(values) => console.log(values)}
         validationSchema={validationSchema}
       >
+        <AppFormField
+          autoCapitalize="words"
+          autoCorrect={false}
+          icon="account"
+          keyboardType="email-address"
+          name="name"
+          placeholder="Name"
+          textContentType="name"
+          width="100%"
+        />
         <AppFormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -46,17 +59,24 @@ function LoginScreen() {
           textContentType="password"
           width="100%"
         />
-        <View style={styles.forgotPassword}>
-          <Button
-            title="Forgot password?"
-            color="grey"
-            onPress={() => setModalVisible(true)}
-          />
-        </View>
-        <View style={styles.buttons}>
-          <SubmitButton title="Login" />
-          <SubmitButton title="Register" color="secondary" />
-        </View>
+        <AppFormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          icon="lock"
+          name="confirmPassword"
+          placeholder=" Confirm Password"
+          secureTextEntry
+          textContentType="password"
+          width="100%"
+        />
+        <SubmitButton title="Register" color="secondary" />
+        <Button
+          title="Back"
+          onPress={
+            // Go back
+            () => console.log()
+          }
+        />
       </AppForm>
     </Screen>
   );
@@ -64,22 +84,10 @@ function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    padding: "10%",
-    width: "100%",
-    justifyContent: "center",
-  },
-  buttons: {
     width: "100%",
     alignItems: "center",
-    marginVertical: 60,
-  },
-  forgotPassword: {
-    position: "relative",
-    width: "100%",
-    alignItems: "flex-end",
-    top: 0,
+    padding: 25,
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;
