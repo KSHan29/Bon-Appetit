@@ -4,7 +4,7 @@ import { useFormikContext } from "formik";
 import AppButton from "../AppButton";
 
 function SubmitButton({ title, color }) {
-  const { handleSubmit } = useFormikContext();
+  const { handleSubmit, isValid } = useFormikContext();
 
   return <AppButton title={title} onPress={handleSubmit} color={color} />;
 }
