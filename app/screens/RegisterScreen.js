@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Button } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
 import * as Yup from "yup";
 
 import Screen from "../components/Screen";
@@ -17,6 +17,7 @@ const validationSchema = Yup.object().shape({
 });
 
 function RegisterScreen() {
+  const navigation = useNavigation();
   return (
     <Screen style={styles.container}>
       <AppForm
@@ -26,7 +27,7 @@ function RegisterScreen() {
           password: "",
           confirmPassword: "",
         }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={() => navigation.navigate("HomeScreen")}
         validationSchema={validationSchema}
       >
         <AppFormField
@@ -70,13 +71,7 @@ function RegisterScreen() {
           width="100%"
         />
         <SubmitButton title="Register" color="secondary" />
-        <Button
-          title="Back"
-          onPress={
-            // Go back
-            () => console.log()
-          }
-        />
+        <Button title="Back" onPress={() => navigation.navigate("Login")} />
       </AppForm>
     </Screen>
   );

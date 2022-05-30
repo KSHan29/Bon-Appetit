@@ -2,10 +2,12 @@ import React from "react";
 import { View, StyleSheet, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
+import { useNavigation } from "@react-navigation/native";
 
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import AppButton from "../components/AppButton";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -13,6 +15,8 @@ const validationSchema = Yup.object().shape({
 });
 
 function LoginScreen() {
+  const navigation = useNavigation();
+
   return (
     <Screen style={styles.container}>
       <MaterialCommunityIcons
@@ -23,7 +27,7 @@ function LoginScreen() {
       <AppText>Bon Appetit</AppText>
       <AppForm
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={() => navigation.navigate("HomeScreen")}
         validationSchema={validationSchema}
       >
         <AppFormField
@@ -50,12 +54,16 @@ function LoginScreen() {
           <Button
             title="Forgot password?"
             color="grey"
-            onPress={() => setModalVisible(true)}
+            onPress={() => navigation.navigate("Forgot Password")}
           />
         </View>
         <View style={styles.buttons}>
           <SubmitButton title="Login" />
-          <SubmitButton title="Register" color="secondary" />
+          <AppButton
+            title="Register"
+            color="secondary"
+            onPress={() => navigation.navigate("Register")}
+          />
         </View>
       </AppForm>
     </Screen>
