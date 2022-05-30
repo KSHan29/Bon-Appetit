@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
+import { useNavigation } from "@react-navigation/native";
 
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
@@ -12,12 +13,17 @@ const validationSchema = Yup.object().shape({
 });
 
 function ForgotPasswordScreen(props) {
+  const navigation = useNavigation();
   return (
     <Screen style={styles.modal}>
       <MaterialCommunityIcons name="lock" size={150} color={"black"} />
       <AppForm
         initialValues={{ email: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={
+          // TODO
+          /* SEND EMAIL TO RESET PASSWORD and return to LoginScreen */
+          () => navigation.navigate("Login")
+        }
         validationSchema={validationSchema}
       >
         <AppText style={styles.header}>Forgot your password?</AppText>
@@ -34,19 +40,8 @@ function ForgotPasswordScreen(props) {
           textContentType="emailAddress"
           width="100%"
         />
-        <SubmitButton
-          title="Submit"
-          color="secondary"
-          funct={() =>
-            // TODO
-            /* SEND EMAIL TO RESET PASSWORD and return to LoginScreen */
-            setModalVisible(false)
-          }
-        />
-        <Button
-          title="Back"
-          onPress={/* Navigate to LoginScreen */ () => console.log()}
-        />
+        <SubmitButton title="Submit" color="secondary" />
+        <Button title="Back" onPress={() => navigation.navigate("Login")} />
       </AppForm>
     </Screen>
   );
