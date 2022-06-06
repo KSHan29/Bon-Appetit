@@ -4,9 +4,19 @@ import { useNavigation } from "@react-navigation/native";
 
 import AppText from "../components/AppText";
 import AppButton from "../components/AppButton";
+import { auth } from "../components/firebase/firebase";
 
 function HomeScreen(props) {
   const navigation = useNavigation();
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.navigate("Login");
+        console.log("signedout");
+      })
+      .catch((error) => alert(error.message));
+  };
   return (
     <View style={styles.container}>
       <AppText>Home Screen (TODO)</AppText>
@@ -14,7 +24,7 @@ function HomeScreen(props) {
         title="Logout"
         onPress={
           /* TODO CLEAR CACHE AND SIGN OUT */
-          () => navigation.navigate("Login")
+          handleSignOut
         }
       />
     </View>

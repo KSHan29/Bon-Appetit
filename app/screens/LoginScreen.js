@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from "../components/firebase/firebase";
 
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
@@ -11,11 +12,33 @@ import AppButton from "../components/AppButton";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(4).label("Password"),
+  password: Yup.string().required().min(6).label("Password"),
 });
 
 function LoginScreen() {
   const navigation = useNavigation();
+  const handleLoginSubmit = (values) => {
+    auth
+      .signInWithEmailAndPassword(values["email"], values["password"])
+      .then((userCredentials) => {
+        // const user = userCredentials.user;
+        navigation.navigate("HomeScreen");
+        console.log("Loggedin");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+  /*
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.navigate("HomeScreen");
+      }
+    });
+    return unsubscribe;
+  });
+  */
 
   return (
     <Screen style={styles.container}>
@@ -27,7 +50,7 @@ function LoginScreen() {
       <AppText>Bon Appetit</AppText>
       <AppForm
         initialValues={{ email: "", password: "" }}
-        onSubmit={() => navigation.navigate("HomeScreen")}
+        onSubmit={handleLoginSubmit}
         validationSchema={validationSchema}
       >
         <AppFormField
