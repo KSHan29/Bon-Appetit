@@ -3,27 +3,35 @@ import { StyleSheet, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
+import { sendPasswordResetEmail } from "firebase/auth";
 
-import Screen from "../components/Screen";
-import AppText from "../components/AppText";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import { auth } from "../components/firebase/firebase";
+import AppText from "../components/AppText";
+import Screen from "../components/Screen";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
 });
 
-function ForgotPasswordScreen(props) {
+function ForgotPasswordScreen() {
   const navigation = useNavigation();
+  const handleForgotPassword = (values) => {
+    sendPasswordResetEmail(auth, values["email"])
+      .then(() => {
+        navigation.navigate("Login");
+        console.log("Forgot Password");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
   return (
-    <Screen style={styles.modal}>
+    <Screen style={styles.screen}>
       <MaterialCommunityIcons name="lock" size={150} color={"black"} />
       <AppForm
         initialValues={{ email: "" }}
-        onSubmit={
-          // TODO
-          /* SEND EMAIL TO RESET PASSWORD and return to LoginScreen */
-          () => navigation.navigate("Login")
-        }
+        onSubmit={handleForgotPassword}
         validationSchema={validationSchema}
       >
         <AppText style={styles.header}>Forgot your password?</AppText>
@@ -48,7 +56,7 @@ function ForgotPasswordScreen(props) {
 }
 
 const styles = StyleSheet.create({
-  modal: {
+  screen: {
     justifyContent: "center",
     alignItems: "center",
     width: "100%",

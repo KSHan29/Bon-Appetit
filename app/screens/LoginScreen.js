@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, StyleSheet, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../components/firebase/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-import Screen from "../components/Screen";
-import AppText from "../components/AppText";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import { auth } from "../components/firebase/firebase";
 import AppButton from "../components/AppButton";
+import AppText from "../components/AppText";
+import Screen from "../components/Screen";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -18,10 +19,8 @@ const validationSchema = Yup.object().shape({
 function LoginScreen() {
   const navigation = useNavigation();
   const handleLoginSubmit = (values) => {
-    auth
-      .signInWithEmailAndPassword(values["email"], values["password"])
-      .then((userCredentials) => {
-        // const user = userCredentials.user;
+    signInWithEmailAndPassword(auth, values["email"], values["password"])
+      .then(() => {
         navigation.navigate("HomeScreen");
         console.log("Loggedin");
       })
@@ -29,16 +28,6 @@ function LoginScreen() {
         alert(error.message);
       });
   };
-  /*
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.navigate("HomeScreen");
-      }
-    });
-    return unsubscribe;
-  });
-  */
 
   return (
     <Screen style={styles.container}>

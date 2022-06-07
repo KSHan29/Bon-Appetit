@@ -1,15 +1,12 @@
 import React from "react";
 import { StyleSheet, Button } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import * as Yup from "yup";
-import { auth } from "../components/firebase/firebase";
+import { useNavigation } from "@react-navigation/native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-//import { firebase } from "../components/firebase/firebase";
-//import { createUserWithEmailAndPassword } from "firebase/auth";
-//import { authentication } from "../components/backend/firebase";
-
-import Screen from "../components/Screen";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import { auth } from "../components/firebase/firebase";
+import Screen from "../components/Screen";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -24,10 +21,8 @@ const validationSchema = Yup.object().shape({
 function RegisterScreen() {
   const navigation = useNavigation();
   const handleRegisterSubmit = (values) => {
-    auth
-      .createUserWithEmailAndPassword(values["email"], values["password"])
-      .then((userCredentials) => {
-        //const user = userCredentials.user;
+    createUserWithEmailAndPassword(auth, values["email"], values["password"])
+      .then(() => {
         navigation.navigate("HomeScreen");
         console.log("registered");
       })
