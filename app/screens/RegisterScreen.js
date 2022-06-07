@@ -23,7 +23,7 @@ function RegisterScreen() {
   const handleRegisterSubmit = (values) => {
     createUserWithEmailAndPassword(auth, values["email"], values["password"])
       .then(() => {
-        navigation.navigate("HomeScreen");
+        navigation.navigate("Login");
         console.log("registered");
       })
       .catch((error) => {
