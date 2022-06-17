@@ -1,28 +1,38 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { signOut } from "firebase/auth";
 
-import AppText from "../components/AppText";
+import { auth } from "../components/firebase/firebase";
 import AppButton from "../components/AppButton";
+import AppText from "../components/AppText";
+import Screen from "../components/Screen";
 
-function HomeScreen(props) {
+function HomeScreen() {
   const navigation = useNavigation();
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        navigation.navigate("Login");
+        console.log("signedout");
+      })
+      .catch((error) => alert(error.message));
+  };
   return (
-    <View style={styles.container}>
+    <Screen style={styles.screen}>
       <AppText>Home Screen (TODO)</AppText>
-      <AppButton
-        title="Logout"
-        onPress={
-          /* TODO CLEAR CACHE AND SIGN OUT */
-          () => navigation.navigate("Login")
-        }
-      />
-    </View>
+      <AppButton title="Logout" onPress={handleSignOut} />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { alignItems: "center", justifyContent: "center", flex: 1 },
+  screen: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    padding: 50,
+  },
 });
 
 export default HomeScreen;

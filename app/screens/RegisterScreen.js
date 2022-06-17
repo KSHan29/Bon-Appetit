@@ -1,15 +1,17 @@
 import React from "react";
 import { StyleSheet, Button } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import * as Yup from "yup";
+import { useNavigation } from "@react-navigation/native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-import Screen from "../components/Screen";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import { auth } from "../components/firebase/firebase";
+import Screen from "../components/Screen";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(4).label("Password"),
+  password: Yup.string().required().min(6).label("Password"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords don't match!")
     .required()
@@ -18,6 +20,17 @@ const validationSchema = Yup.object().shape({
 
 function RegisterScreen() {
   const navigation = useNavigation();
+  const handleRegisterSubmit = (values) => {
+    createUserWithEmailAndPassword(auth, values["email"], values["password"])
+      .then(() => {
+        navigation.navigate("Login");
+        console.log("registered");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
   return (
     <Screen style={styles.container}>
       <AppForm
@@ -27,7 +40,7 @@ function RegisterScreen() {
           password: "",
           confirmPassword: "",
         }}
-        onSubmit={() => navigation.navigate("HomeScreen")}
+        onSubmit={handleRegisterSubmit}
         validationSchema={validationSchema}
       >
         <AppFormField
