@@ -21,7 +21,7 @@ function LoginScreen() {
   const handleLoginSubmit = (values) => {
     signInWithEmailAndPassword(auth, values["email"], values["password"])
       .then(() => {
-        navigation.navigate("HomeScreen");
+        navigation.navigate("LoggedIn");
         console.log("Loggedin");
       })
       .catch((error) => {
@@ -66,7 +66,7 @@ function LoginScreen() {
           <Button
             title="Forgot password?"
             color="grey"
-            onPress={() => navigation.navigate("Forgot Password")}
+            onPress={() => navigation.navigate("ForgotPassword")}
           />
         </View>
         <View style={styles.buttons}>
