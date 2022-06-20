@@ -10,19 +10,11 @@ import AppNavigator from "./AppNavigator";
 const Stack = createNativeStackNavigator();
 
 const AuthNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen
-      name="Login"
-      component={LoginScreen}
-      options={{ headerShown: false }}
-    />
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Login" component={LoginScreen} />
     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
     <Stack.Screen name="Register" component={RegisterScreen} />
-    <Stack.Screen
-      name="LoggedIn"
-      component={AppNavigator}
-      options={{ headerShown: false }}
-    />
+    <Stack.Screen name="LoggedIn" component={AppNavigator} />
   </Stack.Navigator>
 );
 

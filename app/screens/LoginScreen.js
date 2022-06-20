@@ -10,6 +10,7 @@ import { auth } from "../components/firebase/firebase";
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
+// import authStorage from "../auth/storage";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -27,6 +28,7 @@ function LoginScreen() {
       .catch((error) => {
         alert(error.message);
       });
+    // authStorage.storeToken()
   };
 
   return (

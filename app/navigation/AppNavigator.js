@@ -4,14 +4,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HomeScreen } from "../screens";
 import OrdersScreen from "../screens/OrdersScreen";
 import AccountScreen from "../screens/AccountScreen";
+import OrderingNavigator from "./OrderingNavigation";
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => (
   <Tab.Navigator screenOptions={{ headerShown: false }}>
     <Tab.Screen
-      name="Home"
-      component={HomeScreen}
+      name="OrderingStack"
+      component={OrderingNavigator}
       options={{
         tabBarLabel: "Home",
         tabBarIcon: ({ color, size }) => (
