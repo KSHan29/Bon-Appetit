@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 import AppText from "../components/AppText";
@@ -13,16 +13,23 @@ function MenuScreen(props) {
   const [menuItems, setMenuItems] = useState();
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
+  let unsubCol;
+  let unsubSubCol;
+  useEffect(() => {
+    return () => {
+      unsubCol();
+      unsubSubCol();
+    };
+  }, []);
   const colRef = collection(db, "Restaurants");
   const q = query(colRef, where("Name", "==", restaurant));
   let docId;
 
   if (menuItems === undefined) {
-    // Need to unsubscribe
-    onSnapshot(q, (snapshot) => {
+    unsubCol = onSnapshot(q, (snapshot) => {
       docId = snapshot.docs[0].id;
       const subColRef = collection(db, "Restaurants", docId, "Menu");
-      onSnapshot(subColRef, (snapshot) => {
+      unsubSubCol = onSnapshot(subColRef, (snapshot) => {
         const temp = [];
         snapshot.docs.forEach((doc) => {
           temp.push({ id: doc.id, ...doc.data() });
@@ -32,7 +39,7 @@ function MenuScreen(props) {
     });
     return <AppText>Loading</AppText>;
   }
-  console.log(menuItems);
+
   return (
     <Screen>
       <AppText>Address: {postalCode}</AppText>
