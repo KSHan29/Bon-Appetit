@@ -5,6 +5,7 @@ import { Text, FlatList } from "react-native";
 import AppText from "../components/AppText";
 import AppTextInput from "../components/AppTextInput";
 import ListItem from "../components/ListItem";
+import ListItemSeparator from "../components/ListItemSeparator";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const restaurant = [
@@ -44,6 +45,7 @@ function RestaurantListingScreen(props) {
       <FlatList
         data={restaurant}
         keyExtractor={(listing) => listing.id.toString()}
+        ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
           const onPress = () =>
             navigation.navigate("Menu", { postalCode, restaurant: item.name });

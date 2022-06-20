@@ -4,6 +4,7 @@ import { HomeScreen } from "../screens";
 import MenuScreen from "../screens/MenuScreen";
 import RestaurantListingScreen from "../screens/RestaurantListingScreen";
 import JoinGroupOrdersScreen from "../screens/JoinGroupOrdersScreen";
+import CartScreen from "../screens/CartScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,14 +20,15 @@ const OrderingNavigator = () => (
       component={RestaurantListingScreen}
       options={{ headerTitle: "" }}
     />
-    <Stack.Screen
-      name="Menu"
-      component={MenuScreen}
-      options={{ headerTitle: "" }}
-    />
+    <Stack.Screen name="Menu" component={MenuScreen} />
     <Stack.Screen
       name="JoinGroupOrdersScreen"
       component={JoinGroupOrdersScreen}
+      options={{ headerTitle: "" }}
+    />
+    <Stack.Screen
+      name="Cart"
+      component={CartScreen}
       options={{ headerTitle: "" }}
     />
   </Stack.Navigator>
