@@ -13,6 +13,21 @@ const restaurant = [
     name: "McDonald's - Bedok Mall",
     image: require("../assets/McDonalds-logo.png"),
   },
+  {
+    id: 2,
+    name: "KFC",
+    image: require("../assets/KFC-logo.png"),
+  },
+  {
+    id: 3,
+    name: "WingStop",
+    image: require("../assets/Wingstop-logo.png"),
+  },
+  {
+    id: 4,
+    name: "Subway",
+    image: require("../assets/Subway-logo.png"),
+  },
 ];
 
 // maybe create new list item for restaurant then can change the search icon also
