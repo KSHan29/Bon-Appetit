@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, FlatList } from "react-native";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import Screen from "../components/Screen";
-import { collection, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../components/firebase/firebase";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import AppText from "../components/AppText";
 import AppTextInput from "../components/AppTextInput";
 import ListItem from "../components/ListItem";
@@ -55,10 +55,32 @@ const orders = [
     image: require("../assets/McDonalds-logo.png"),
   },
 ];
+
 function JoinGroupOrdersScreen(props) {
+  // return <Text>hello</Text>;
   const navigation = useNavigation();
   const route = useRoute();
+  const [orderListings, setOrderListings] = useState();
   const postalCode = route.params.postalCode;
+  let unsubCol;
+  // useEffect(() => {
+  //   return () => {
+  //     unsubCol();
+  //   };
+  // }, []);
+  const colRef = collection(db, "Current Orders");
+
+  if (orderListings === undefined) {
+    unsubCol = onSnapshot(colRef, (snapshot) => {
+      const temp = [];
+      snapshot.docs.forEach((doc) => {
+        temp.push({ id: doc.id, ...doc.data() });
+      });
+      setOrderListings(temp);
+    });
+    return <AppText>Loading</AppText>;
+  }
+
   return (
     <Screen>
       <AppText>Address: {postalCode}</AppText>
@@ -66,14 +88,23 @@ function JoinGroupOrdersScreen(props) {
       <AppTextInput icon="map-search" placeholder="Search"></AppTextInput>
 
       <FlatList
-        data={orders}
+        data={orderListings}
         keyExtractor={(listing) => listing.id.toString()}
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
           const onPress = () =>
-            navigation.navigate("Menu", { postalCode, restaurant: item.name });
+            navigation.navigate("Menu", {
+              postalCode: item.Destination,
+              restaurant: item.Name,
+            });
+
           return (
-            <ListItem title={item.name} image={item.image} onPress={onPress} />
+            <ListItem
+              title={item.Name}
+              subTitle={`Delivery Address: ${item.Destination}`}
+              image
+              onPress={onPress}
+            />
           );
         }}
       />
