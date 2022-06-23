@@ -7,17 +7,18 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import { db } from "../components/firebase/firebase";
+import { auth } from "../components/firebase/firebase";
 import CartListItem from "../components/CartListItem";
-import AppButton from "../components/AppButton";
 import colors from "../config/colors";
 import ListItemSeparator from "../components/ListItemSeparator";
 
 function CartScreen(props) {
   const route = useRoute();
   const [cartItems, setCartItems] = useState();
+  const [totalCost, setTotalCost] = useState(0);
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
-  const cartID = route.params.docID;
+  const userID = auth.currentUser.uid;
 
   const navigation = useNavigation();
   const onConfirmOrderPress = () => {
@@ -26,12 +27,19 @@ function CartScreen(props) {
   };
 
   if (cartItems === undefined) {
-    const colRef = collection(db, "UsersCart", cartID, "Orders");
+    const colRef = collection(db, "Users", userID, "Cart");
     onSnapshot(colRef, (snapshot) => {
       let temp = [];
+      let tempAmt = 0;
       snapshot.docs.forEach((doc) => {
         temp.push({ ...doc.data(), id: doc.id });
+        const price = doc.data().Price;
+        console.log(price);
+        const quantity = doc.data().quantity;
+        console.log(quantity);
+        tempAmt += price * quantity;
       });
+      setTotalCost(tempAmt);
       setCartItems(temp);
     });
   }
@@ -57,9 +65,9 @@ function CartScreen(props) {
         }}
       />
       <View style={styles.priceContainer}>
-        <AppText>Subtotal: 10</AppText>
-        <AppText>Delivery Fee: 20</AppText>
-        <AppText>Total Price: 30</AppText>
+        <AppText>Subtotal: ${totalCost}</AppText>
+        <AppText>Delivery Fee: $5</AppText>
+        <AppText>Total Price: ${totalCost + 5}</AppText>
       </View>
       <TouchableOpacity
         style={styles.cartButton}

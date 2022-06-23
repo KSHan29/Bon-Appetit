@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Button } from "react-native";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { getIdToken, createUserWithEmailAndPassword } from "firebase/auth";
+import jwtDecode from "jwt-decode";
+import { doc, setDoc } from "firebase/firestore";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import { auth } from "../components/firebase/firebase";
 import Screen from "../components/Screen";
 import { db } from "../components/firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import AuthContext from "../auth/context";
+import authStorage from "../auth/storage";
 
 // validation checks for inputs
 const phoneRegExp =
@@ -26,20 +29,24 @@ const validationSchema = Yup.object().shape({
 
 function RegisterScreen() {
   const navigation = useNavigation();
+  const authContext = useContext(AuthContext);
   const handleRegisterSubmit = (values) => {
     createUserWithEmailAndPassword(auth, values["email"], values["password"])
       .then(() => {
         // Create new database for the cart
         const userID = auth.currentUser.uid;
         const docRef = doc(db, "Users", userID);
-        setDoc(docRef, {
-          Name: values["name"],
-          Email: values["email"],
-          Phone: values["phoneNumber"],
-        }).catch((err) => console.log(err.message));
-
-        navigation.navigate("Login");
-        console.log(values);
+        getIdToken(auth.currentUser).then((token) => {
+          const user = jwtDecode(token);
+          authContext.setUser(user);
+          authStorage.storeToken(token);
+          setDoc(docRef, {
+            Name: values["name"],
+            Email: values["email"],
+            Phone: values["phoneNumber"],
+          }).catch((err) => console.log(err.message));
+          console.log(values);
+        });
       })
       .catch((error) => {
         alert(error.message);

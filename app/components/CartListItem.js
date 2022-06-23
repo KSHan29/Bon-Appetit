@@ -1,20 +1,14 @@
 import React, { useState } from "react";
 import { View, StyleSheet, TouchableHighlight, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import { auth } from "./firebase/firebase";
 import AppText from "./AppText";
 import colors from "../config/colors";
-function MenuListItem({ title, subTitle, quantity, price }) {
-  const [orderCount, setOrderCount] = useState(0);
+function CartListItem({ title, subTitle, quantity, price }) {
+  const amount = quantity * price;
+  // collate((prevAmt) => prevAmt + amount);
 
-  const onAddPress = () => {
-    setOrderCount(orderCount + 1);
-  };
-
-  const onMinusPress = () => {
-    if (orderCount > 0) {
-      setOrderCount(orderCount - 1);
-    }
-  };
   return (
     <>
       <View style={styles.container}>
@@ -33,14 +27,8 @@ function MenuListItem({ title, subTitle, quantity, price }) {
         </View>
 
         <View style={styles.buttonContainer}>
-          <View style={styles.button}>
-            <Button title="+" onPress={onAddPress}></Button>
-          </View>
-          <View style={styles.button}>
-            <Button title="-" onPress={onMinusPress}></Button>
-          </View>
-
           <AppText style={styles.counter}>x{quantity}</AppText>
+          <AppText>${amount}</AppText>
         </View>
       </View>
     </>
@@ -60,7 +48,6 @@ const styles = StyleSheet.create({
     margin: 1,
   },
   buttonContainer: {
-    flexDirection: "row",
     alignItems: "center",
   },
   counter: {
@@ -84,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuListItem;
+export default CartListItem;
