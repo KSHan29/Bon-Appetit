@@ -7,33 +7,32 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import { db } from "../components/firebase/firebase";
-import MenuListItem from "../components/MenuListItem";
+import CartListItem from "../components/CartListItem";
 import AppButton from "../components/AppButton";
-import ListItemSeparator from "../components/ListItemSeparator";
 import colors from "../config/colors";
+import ListItemSeparator from "../components/ListItemSeparator";
 
-function MenuScreen(props) {
+function CartScreen(props) {
   const route = useRoute();
   const [menuItems, setMenuItems] = useState();
-  const [cartItems, setCartItems] = useState();
-  // TODO ONPRESS, ADD ITEMS TO CART
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
   let unsubCol;
   let unsubSubCol;
-  //   useEffect(() => {
-  //     return () => {
-  //       unsubCol();
-  //       unsubSubCol();
-  //     };
-  //   }, []);
-  const colRef = collection(db, "Restaurants");
+  /* useEffect(() => {
+    return () => {
+      unsubCol();
+      unsubSubCol();
+    };
+  }, []);
+   */ const colRef = collection(db, "Restaurants");
   const q = query(colRef, where("Name", "==", restaurant));
   let docId;
 
   const navigation = useNavigation();
-  const onViewCartPress = () => {
-    navigation.navigate("Cart", { postalCode, restaurant });
+  const onConfirmOrderPress = () => {
+    //navigation.navigate("Cart");
+    console.log("order confirmed");
   };
 
   if (menuItems === undefined) {
@@ -62,24 +61,24 @@ function MenuScreen(props) {
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
-          return <MenuListItem title={item.Name} price={item.Price} />;
+          return <CartListItem title={item.Name} price={item.Price} />;
         }}
       />
-      <View>
-        <TouchableOpacity
-          style={styles.cartButton}
-          underlayColor={colors.black}
-          onPress={onViewCartPress}
-        >
-          <AppText>View Cart</AppText>
-          <View style={styles.cartIcon}>
-            <MaterialCommunityIcons name="cart-check" size={25} />
-          </View>
-          {
-            //<AppText>Items</AppText>
-          }
-        </TouchableOpacity>
+      <View style={styles.priceContainer}>
+        <AppText>Subtotal: 10</AppText>
+        <AppText>Delivery Fee: 20</AppText>
+        <AppText>Total Price: 30</AppText>
       </View>
+      <TouchableOpacity
+        style={styles.cartButton}
+        underlayColor={colors.black}
+        onPress={onConfirmOrderPress}
+      >
+        <AppText style={styles.confirmOrderButton}>Confirm Order</AppText>
+        <View style={styles.cartIcon}>
+          <MaterialCommunityIcons name="cart-check" size={25} />
+        </View>
+      </TouchableOpacity>
     </Screen>
   );
 }
@@ -95,6 +94,10 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     justifyContent: "center",
   },
+  confirmOrderButton: {
+    fontSize: 20,
+    fontWeight: "400",
+  },
   headers: {
     justifyContent: "center",
     alignItems: "center",
@@ -103,6 +106,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "500",
   },
+  priceContainer: {
+    padding: 20,
+  },
 });
 
-export default MenuScreen;
+export default CartScreen;

@@ -8,6 +8,7 @@ import { db } from "../components/firebase/firebase";
 import AppText from "../components/AppText";
 import AppTextInput from "../components/AppTextInput";
 import ListItem from "../components/ListItem";
+import ListItemSeparator from "../components/ListItemSeparator";
 
 const restaurant = [
   {
@@ -70,6 +71,7 @@ function JoinGroupOrdersScreen(props) {
       <FlatList
         data={orderListings}
         keyExtractor={(listing) => listing.id.toString()}
+        ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
           const onPress = () =>
             navigation.navigate("Menu", {
