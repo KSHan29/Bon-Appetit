@@ -18,7 +18,7 @@ function MenuScreen(props) {
   const route = useRoute();
   const [menuItems, setMenuItems] = useState();
   const [cartItems, setCartItems] = useState(0);
-  const [docID, setDocID] = useState();
+  const userID = auth.currentUser.uid;
   // TODO ONPRESS, ADD ITEMS TO CART
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
@@ -36,7 +36,7 @@ function MenuScreen(props) {
 
   const navigation = useNavigation();
   const onViewCartPress = () => {
-    navigation.navigate("Cart", { postalCode, restaurant, docID });
+    navigation.navigate("Cart", { postalCode, restaurant });
   };
 
   if (menuItems === undefined) {
@@ -54,28 +54,10 @@ function MenuScreen(props) {
     return <AppText>Loading</AppText>;
   }
 
-  // Create new database for the cart
-  const user = auth.currentUser;
-  let email;
-  if (user !== null) {
-    email = user.email;
-  }
-  if (docID === undefined && email !== undefined) {
-    const colRef = collection(db, "UsersCart");
-    const docRef = addDoc(colRef, {
-      Email: email,
-      PostalCode: postalCode,
-    })
-      .then((doc) => {
-        setDocID(doc.id);
-      })
-      .catch((err) => console.log(err.message));
-  }
-
   // count items in cart
 
-  if (docID !== undefined) {
-    const colRef = collection(db, "UsersCart", docID, "Orders");
+  if (userID !== undefined) {
+    const colRef = collection(db, "Users", userID, "Cart");
     onSnapshot(colRef, (snapshot) => {
       let temp = 0;
       snapshot.docs.forEach((doc) => {
@@ -97,12 +79,7 @@ function MenuScreen(props) {
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
           return (
-            <MenuListItem
-              title={item.Name}
-              price={item.Price}
-              item={item}
-              userID={docID}
-            />
+            <MenuListItem title={item.Name} price={item.Price} item={item} />
           );
         }}
       />

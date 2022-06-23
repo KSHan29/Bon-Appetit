@@ -7,7 +7,12 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import { auth } from "../components/firebase/firebase";
 import Screen from "../components/Screen";
+import { db } from "../components/firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
+// validation checks for inputs
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
@@ -16,6 +21,7 @@ const validationSchema = Yup.object().shape({
     .oneOf([Yup.ref("password"), null], "Passwords don't match!")
     .required()
     .label("Password"),
+  phoneNumber: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
 });
 
 function RegisterScreen() {
@@ -23,8 +29,17 @@ function RegisterScreen() {
   const handleRegisterSubmit = (values) => {
     createUserWithEmailAndPassword(auth, values["email"], values["password"])
       .then(() => {
+        // Create new database for the cart
+        const userID = auth.currentUser.uid;
+        const docRef = doc(db, "Users", userID);
+        setDoc(docRef, {
+          Name: values["name"],
+          Email: values["email"],
+          Phone: values["phoneNumber"],
+        }).catch((err) => console.log(err.message));
+
         navigation.navigate("Login");
-        console.log("registered");
+        console.log(values);
       })
       .catch((error) => {
         alert(error.message);
@@ -39,6 +54,7 @@ function RegisterScreen() {
           email: "",
           password: "",
           confirmPassword: "",
+          phoneNumber: "",
         }}
         onSubmit={handleRegisterSubmit}
         validationSchema={validationSchema}
@@ -78,9 +94,18 @@ function RegisterScreen() {
           autoCorrect={false}
           icon="lock"
           name="confirmPassword"
-          placeholder=" Confirm Password"
+          placeholder="Confirm Password"
           secureTextEntry
           textContentType="password"
+          width="100%"
+        />
+        <AppFormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          icon="phone"
+          name="phoneNumber"
+          placeholder="Phone Number"
+          textContentType="telephoneNumber"
           width="100%"
         />
         <SubmitButton title="Register" color="secondary" />

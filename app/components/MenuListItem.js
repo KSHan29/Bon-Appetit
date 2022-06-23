@@ -3,24 +3,13 @@ import { View, StyleSheet, TouchableHighlight, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import colors from "../config/colors";
-import {
-  getDocs,
-  addDoc,
-  collection,
-  updateDoc,
-  Firestore,
-  FieldValue,
-  query,
-  where,
-  getDoc,
-  doc,
-  onSnapshot,
-} from "firebase/firestore";
+import { addDoc, collection, updateDoc, getDoc, doc } from "firebase/firestore";
+import { auth } from "./firebase/firebase";
 import { db } from "./firebase/firebase";
-import { FirebaseError } from "firebase/app";
-function MenuListItem({ title, subTitle, price, item, userID }) {
+function MenuListItem({ title, subTitle, price, item }) {
   const [orderCount, setOrderCount] = useState(0);
   const [menuItemID, setMenuItemID] = useState();
+  const userID = auth.currentUser.uid;
 
   const onAddPress = () => {
     setOrderCount(orderCount + 1);
@@ -34,7 +23,7 @@ function MenuListItem({ title, subTitle, price, item, userID }) {
 
   // add items chosen to cart (stored in firestore)
   const onBasketPress = () => {
-    const colRef = collection(db, "UsersCart", userID, "Orders");
+    const colRef = collection(db, "Users", userID, "Cart");
     if (orderCount === 0) {
       alert("Please set quantity to at least 1.");
     } else {
@@ -52,7 +41,7 @@ function MenuListItem({ title, subTitle, price, item, userID }) {
           .catch((err) => console.log(err.message));
       } else {
         // item added before, update quantity
-        const docRef = doc(db, "UsersCart", userID, "Orders", menuItemID);
+        const docRef = doc(db, "Users", userID, "Cart", menuItemID);
         getDoc(docRef)
           .then((doc) => {
             const qty = doc.data().quantity + orderCount;
