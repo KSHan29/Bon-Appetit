@@ -7,7 +7,6 @@ import AppText from "./AppText";
 import colors from "../config/colors";
 function CartListItem({ title, subTitle, quantity, price }) {
   const amount = quantity * price;
-  // collate((prevAmt) => prevAmt + amount);
 
   return (
     <>

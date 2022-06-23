@@ -34,9 +34,7 @@ function CartScreen(props) {
       snapshot.docs.forEach((doc) => {
         temp.push({ ...doc.data(), id: doc.id });
         const price = doc.data().Price;
-        console.log(price);
         const quantity = doc.data().quantity;
-        console.log(quantity);
         tempAmt += price * quantity;
       });
       setTotalCost(tempAmt);

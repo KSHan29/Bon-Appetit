@@ -36,7 +36,6 @@ function RegisterScreen() {
         // Create new database for the cart
         const userID = auth.currentUser.uid;
         const docRef = doc(db, "Users", userID);
-<<<<<<< HEAD
         getIdToken(auth.currentUser).then((token) => {
           const user = jwtDecode(token);
           authContext.setUser(user);
@@ -48,15 +47,6 @@ function RegisterScreen() {
           }).catch((err) => console.log(err.message));
           console.log(values);
         });
-=======
-        setDoc(docRef, {
-          Name: values["name"],
-          Email: values["email"],
-          Phone: values["phoneNumber"],
-        }).catch((err) => console.log(err.message));
-
-        navigation.navigate("Login");
->>>>>>> dd9bc3e1bcc07fd456ccd13feca954a120af3c25
       })
       .catch((error) => {
         alert(error.message);
