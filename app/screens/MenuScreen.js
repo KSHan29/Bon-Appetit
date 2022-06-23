@@ -15,12 +15,12 @@ function MenuScreen(props) {
   const restaurant = route.params.restaurant;
   let unsubCol;
   let unsubSubCol;
-  useEffect(() => {
-    return () => {
-      unsubCol();
-      unsubSubCol();
-    };
-  }, []);
+  //   useEffect(() => {
+  //     return () => {
+  //       unsubCol();
+  //       unsubSubCol();
+  //     };
+  //   }, []);
   const colRef = collection(db, "Restaurants");
   const q = query(colRef, where("Name", "==", restaurant));
   let docId;

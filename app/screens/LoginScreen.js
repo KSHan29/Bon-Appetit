@@ -1,34 +1,40 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { getIdToken, signInWithEmailAndPassword } from "firebase/auth";
+import jwtDecode from "jwt-decode";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import { auth } from "../components/firebase/firebase";
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
-// import authStorage from "../auth/storage";
+import AuthContext from "../auth/context";
+import authStorage from "../auth/storage";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(6).label("Password"),
+  password: Yup.string().required().label("Password"),
 });
 
 function LoginScreen() {
+  const authContext = useContext(AuthContext);
   const navigation = useNavigation();
-  const handleLoginSubmit = (values) => {
+  const handleLoginSubmit = async (values) => {
     signInWithEmailAndPassword(auth, values["email"], values["password"])
       .then(() => {
-        navigation.navigate("LoggedIn");
         console.log("Loggedin");
+        getIdToken(auth.currentUser).then((token) => {
+          const user = jwtDecode(token);
+          authContext.setUser(user);
+          authStorage.storeToken(token);
+        });
       })
       .catch((error) => {
         alert(error.message);
       });
-    // authStorage.storeToken()
   };
 
   return (
