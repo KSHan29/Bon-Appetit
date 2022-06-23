@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableHighlight, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import AppText from "./AppText";
-import colors from "../config/colors";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addDoc,
   collection,
@@ -13,51 +12,46 @@ import {
   where,
   setDoc,
 } from "firebase/firestore";
+
+import AppText from "./AppText";
+import colors from "../config/colors";
 import { auth } from "./firebase/firebase";
 import { db } from "./firebase/firebase";
+
 function MenuListItem({ title, subTitle, price, item, restaurant }) {
-  const [orderCount, setOrderCount] = useState(0);
+  // check if the value exist
+  let initalValue = useSelector((state) => {
+    if (state[restaurant]) {
+      if (state[restaurant].filter((obj) => title === obj.Name).length !== 0) {
+        return state[restaurant].filter((obj) => title === obj.Name)[0]
+          .quantity;
+      }
+    }
+    return undefined;
+  });
+  // console.log(initalValue);
+
+  const [orderCount, setOrderCount] = useState(
+    initalValue === undefined ? 0 : initalValue
+  );
+  useEffect(() => {
+    const temp = {
+      type: "updateCart",
+      restaurant: restaurant,
+      value: { Name: title, Price: price, quantity: orderCount },
+    };
+    dispatch(temp);
+  }, [orderCount]);
   const userID = auth.currentUser.uid;
+  const dispatch = useDispatch();
 
   const onAddPress = () => {
-    setOrderCount(orderCount + 1);
+    setOrderCount((prevCount) => prevCount + 1);
   };
 
   const onMinusPress = () => {
     if (orderCount > 0) {
-      setOrderCount(orderCount - 1);
-    }
-  };
-
-  // add items chosen to cart (stored in firestore)
-  const onBasketPress = () => {
-    if (orderCount === 0) {
-      alert("Please add at least 1 item.");
-    } else {
-      const docRef = doc(db, "Users", userID, restaurant, item.id);
-      getDoc(docRef).then((snapshot) => {
-        if (snapshot.data() !== undefined) {
-          const qty = snapshot.data().quantity + orderCount;
-          updateDoc(docRef, {
-            quantity: qty,
-          })
-            .then(() => {
-              setOrderCount(0);
-              alert("Added to cart.");
-            })
-            .catch((err) => console.log(err.message));
-        } else {
-          setDoc(docRef, {
-            ...item,
-            quantity: orderCount,
-          })
-            .then(() => {
-              setOrderCount(0);
-              alert("Added to cart.");
-            })
-            .catch((err) => console.log(err.message));
-        }
-      });
+      setOrderCount((prevCount) => prevCount - 1);
     }
   };
 
@@ -88,9 +82,6 @@ function MenuListItem({ title, subTitle, price, item, restaurant }) {
 
           <AppText style={styles.counter}>x{orderCount}</AppText>
         </View>
-        <TouchableHighlight underlayColor={"#45b6ae"} onPress={onBasketPress}>
-          <MaterialCommunityIcons name="basket" size={25} />
-        </TouchableHighlight>
       </View>
     </>
   );

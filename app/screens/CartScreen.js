@@ -1,8 +1,15 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+} from "firebase/firestore";
 import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
 
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
@@ -14,32 +21,45 @@ import ListItemSeparator from "../components/ListItemSeparator";
 
 function CartScreen(props) {
   const route = useRoute();
-  const [cartItems, setCartItems] = useState();
-  const [totalCost, setTotalCost] = useState(0);
+  const dispatch = useDispatch();
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
   const userID = auth.currentUser.uid;
 
   const navigation = useNavigation();
   const onConfirmOrderPress = () => {
-    //navigation.navigate("Cart");
+    navigation.navigate("Orders");
+    const colRef = collection(db, "Orders");
+    addDoc(colRef, {
+      status: "Pending",
+      address: postalCode,
+      name: restaurant,
+      // time:
+      // count:
+    }).then((docRef) => {
+      cartItems.forEach((obj) =>
+        addDoc(collection(db, "Orders", docRef.id, userID), {
+          Name: obj.Name,
+          Price: obj.Price,
+          quantity: obj.quantity,
+        })
+      );
+      dispatch({ type: "clearCart" });
+      navigation.popToTop();
+      // Need to also add some logic for keeping track of OrderID
+    });
     console.log("order confirmed");
   };
 
-  if (cartItems === undefined) {
-    const colRef = collection(db, "Users", userID, "Cart");
-    onSnapshot(colRef, (snapshot) => {
-      let temp = [];
-      let tempAmt = 0;
-      snapshot.docs.forEach((doc) => {
-        temp.push({ ...doc.data(), id: doc.id });
-        const price = doc.data().Price;
-        const quantity = doc.data().quantity;
-        tempAmt += price * quantity;
-      });
-      setTotalCost(tempAmt);
-      setCartItems(temp);
-    });
+  const itemArr = useSelector((store) => store[restaurant]);
+  let cartItems;
+  let totalCost;
+  if (itemArr !== undefined) {
+    cartItems = itemArr.filter((obj) => obj.quantity !== 0);
+    totalCost = itemArr.reduce(
+      (total, currObj) => total + currObj.Price * currObj.quantity,
+      0
+    );
   }
 
   return (
@@ -50,7 +70,7 @@ function CartScreen(props) {
       </View>
       <FlatList
         data={cartItems}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.Name}
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
           return (

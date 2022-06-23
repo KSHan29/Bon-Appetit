@@ -10,7 +10,7 @@ import { db } from "../components/firebase/firebase";
 function OrdersScreen(props) {
   return (
     <Screen>
-      <Text>OrderScreen</Text>
+      <Text>Ongoing</Text>
     </Screen>
   );
 }
