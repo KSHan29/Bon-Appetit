@@ -39,7 +39,6 @@ function RegisterScreen() {
         }).catch((err) => console.log(err.message));
 
         navigation.navigate("Login");
-        console.log(values);
       })
       .catch((error) => {
         alert(error.message);

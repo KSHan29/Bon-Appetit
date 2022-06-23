@@ -3,7 +3,16 @@ import { View, StyleSheet, TouchableHighlight, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import colors from "../config/colors";
-import { addDoc, collection, updateDoc, getDoc, doc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  updateDoc,
+  getDoc,
+  doc,
+  query,
+  where,
+  setDoc,
+} from "firebase/firestore";
 import { auth } from "./firebase/firebase";
 import { db } from "./firebase/firebase";
 function MenuListItem({ title, subTitle, price, item }) {
@@ -23,40 +32,30 @@ function MenuListItem({ title, subTitle, price, item }) {
 
   // add items chosen to cart (stored in firestore)
   const onBasketPress = () => {
-    const colRef = collection(db, "Users", userID, "Cart");
-    if (orderCount === 0) {
-      alert("Please set quantity to at least 1.");
-    } else {
-      // first time adding the item
-      if (menuItemID === undefined) {
-        addDoc(colRef, {
-          ...item,
-          quantity: orderCount,
+    const docRef = doc(db, "Users", userID, "Cart", item.id);
+    getDoc(docRef).then((snapshot) => {
+      if (snapshot.data() !== undefined) {
+        const qty = snapshot.data().quantity + orderCount;
+        updateDoc(docRef, {
+          quantity: qty,
         })
-          .then((doc) => {
+          .then(() => {
             setOrderCount(0);
-            setMenuItemID(doc.id);
             alert("Added to cart.");
           })
           .catch((err) => console.log(err.message));
       } else {
-        // item added before, update quantity
-        const docRef = doc(db, "Users", userID, "Cart", menuItemID);
-        getDoc(docRef)
-          .then((doc) => {
-            const qty = doc.data().quantity + orderCount;
-            updateDoc(docRef, {
-              quantity: qty,
-            })
-              .then(() => {
-                setOrderCount(0);
-                alert("Added to cart.");
-              })
-              .catch((err) => console.log(err.message));
+        setDoc(docRef, {
+          ...item,
+          quantity: orderCount,
+        })
+          .then(() => {
+            setOrderCount(0);
+            alert("Added to cart.");
           })
           .catch((err) => console.log(err.message));
       }
-    }
+    });
   };
 
   return (
