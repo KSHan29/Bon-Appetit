@@ -73,13 +73,12 @@ function MenuListItem({ title, subTitle, price, item, restaurant }) {
         </View>
 
         <View style={styles.buttonContainer}>
-          <View style={styles.button}>
-            <Button title="+" onPress={onAddPress}></Button>
-          </View>
-          <View style={styles.button}>
-            <Button title="-" onPress={onMinusPress}></Button>
-          </View>
-
+          <TouchableHighlight underlayColor={"#45b6ae"} onPress={onAddPress}>
+            <MaterialCommunityIcons name="plus" size={25} />
+          </TouchableHighlight>
+          <TouchableHighlight underlayColor={"#45b6ae"} onPress={onMinusPress}>
+            <MaterialCommunityIcons name="minus" size={25} />
+          </TouchableHighlight>
           <AppText style={styles.counter}>x{orderCount}</AppText>
         </View>
       </View>
@@ -93,11 +92,6 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: colors.white,
     alignItems: "center",
-  },
-  button: {
-    backgroundColor: "lightgray",
-    borderRadius: 7,
-    margin: 1,
   },
   buttonContainer: {
     flexDirection: "row",
