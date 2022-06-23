@@ -9,12 +9,17 @@ import {
 import AuthNavigator from "./app/navigation/AuthNavigator";
 import AppNavigator from "./app/navigation/AppNavigator";
 import OrderingNavigator from "./app/navigation/OrderingNavigation";
+import TestingScreen from "./app/screens/TestingScreen";
+import JoinGroupOrdersScreen from "./app/screens/JoinGroupOrdersScreen";
 
 export default function App() {
   return (
     <NavigationContainer>
-      {/* <AuthNavigator /> */}
-      <OrderingNavigator />
+      <AuthNavigator />
+      {
+        //<OrderingNavigator />}
+      }
     </NavigationContainer>
+    //<TestingScreen />
   );
 }

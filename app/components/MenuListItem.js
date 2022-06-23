@@ -3,8 +3,24 @@ import { View, StyleSheet, TouchableHighlight, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import colors from "../config/colors";
-function MenuListItem({ title, subTitle, onPress, price }) {
+import {
+  getDocs,
+  addDoc,
+  collection,
+  updateDoc,
+  Firestore,
+  FieldValue,
+  query,
+  where,
+  getDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+import { db } from "./firebase/firebase";
+import { FirebaseError } from "firebase/app";
+function MenuListItem({ title, subTitle, price, item, userID }) {
   const [orderCount, setOrderCount] = useState(0);
+  const [menuItemID, setMenuItemID] = useState();
 
   const onAddPress = () => {
     setOrderCount(orderCount + 1);
@@ -15,10 +31,45 @@ function MenuListItem({ title, subTitle, onPress, price }) {
       setOrderCount(orderCount - 1);
     }
   };
+
+  // add items chosen to cart (stored in firestore)
   const onBasketPress = () => {
-    setOrderCount(0);
-    // update firebase
+    const colRef = collection(db, "UsersCart", userID, "Orders");
+    if (orderCount === 0) {
+      alert("Please set quantity to at least 1.");
+    } else {
+      // first time adding the item
+      if (menuItemID === undefined) {
+        addDoc(colRef, {
+          ...item,
+          quantity: orderCount,
+        })
+          .then((doc) => {
+            setOrderCount(0);
+            setMenuItemID(doc.id);
+            alert("Added to cart.");
+          })
+          .catch((err) => console.log(err.message));
+      } else {
+        // item added before, update quantity
+        const docRef = doc(db, "UsersCart", userID, "Orders", menuItemID);
+        getDoc(docRef)
+          .then((doc) => {
+            const qty = doc.data().quantity + orderCount;
+            updateDoc(docRef, {
+              quantity: qty,
+            })
+              .then(() => {
+                setOrderCount(0);
+                alert("Added to cart.");
+              })
+              .catch((err) => console.log(err.message));
+          })
+          .catch((err) => console.log(err.message));
+      }
+    }
   };
+
   return (
     <>
       <View style={styles.container}>

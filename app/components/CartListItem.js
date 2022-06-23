@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableHighlight, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import colors from "../config/colors";
-function MenuListItem({ title, subTitle, onPress, price }) {
+function MenuListItem({ title, subTitle, quantity, price }) {
   const [orderCount, setOrderCount] = useState(0);
 
   const onAddPress = () => {
@@ -40,7 +40,7 @@ function MenuListItem({ title, subTitle, onPress, price }) {
             <Button title="-" onPress={onMinusPress}></Button>
           </View>
 
-          <AppText style={styles.counter}>x{orderCount}</AppText>
+          <AppText style={styles.counter}>x{quantity}</AppText>
         </View>
       </View>
     </>

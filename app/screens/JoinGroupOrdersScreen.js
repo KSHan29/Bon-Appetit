@@ -10,8 +10,8 @@ import AppTextInput from "../components/AppTextInput";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 
-//const colRef = collection(db, "Current Orders");
-/* let snapshot = await db
+/* const colRef = collection(db, "Current Orders");
+let snapshot = await db
   .collection("current Orders")
   .doc("15fwTj5O8GaSkZuJPQWW")
   .collection("User")
@@ -20,8 +20,8 @@ import ListItemSeparator from "../components/ListItemSeparator";
 snapshot.forEach((doc) => {
   console.log(doc.data());
 }); */
-/* 
-getDocs(colRef).then((snapshot) => {
+
+/* getDocs(colRef).then((snapshot) => {
   let orders = [];
   snapshot.docs.forEach((doc) => {
     orders.push({ ...doc.data(), id: doc.id });

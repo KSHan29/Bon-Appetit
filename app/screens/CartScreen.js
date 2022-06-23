@@ -14,20 +14,10 @@ import ListItemSeparator from "../components/ListItemSeparator";
 
 function CartScreen(props) {
   const route = useRoute();
-  const [menuItems, setMenuItems] = useState();
+  const [cartItems, setCartItems] = useState();
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
-  let unsubCol;
-  let unsubSubCol;
-  /* useEffect(() => {
-    return () => {
-      unsubCol();
-      unsubSubCol();
-    };
-  }, []);
-   */ const colRef = collection(db, "Restaurants");
-  const q = query(colRef, where("Name", "==", restaurant));
-  let docId;
+  const cartID = route.params.docID;
 
   const navigation = useNavigation();
   const onConfirmOrderPress = () => {
@@ -35,19 +25,15 @@ function CartScreen(props) {
     console.log("order confirmed");
   };
 
-  if (menuItems === undefined) {
-    unsubCol = onSnapshot(q, (snapshot) => {
-      docId = snapshot.docs[0].id;
-      const subColRef = collection(db, "Restaurants", docId, "Menu");
-      unsubSubCol = onSnapshot(subColRef, (snapshot) => {
-        const temp = [];
-        snapshot.docs.forEach((doc) => {
-          temp.push({ id: doc.id, ...doc.data() });
-        });
-        setMenuItems(temp);
+  if (cartItems === undefined) {
+    const colRef = collection(db, "UsersCart", cartID, "Orders");
+    onSnapshot(colRef, (snapshot) => {
+      let temp = [];
+      snapshot.docs.forEach((doc) => {
+        temp.push({ ...doc.data(), id: doc.id });
       });
+      setCartItems(temp);
     });
-    return <AppText>Loading</AppText>;
   }
 
   return (
@@ -57,11 +43,17 @@ function CartScreen(props) {
         <AppText style={styles.headersFont}>Restaurant: {restaurant}</AppText>
       </View>
       <FlatList
-        data={menuItems}
+        data={cartItems}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
-          return <CartListItem title={item.Name} price={item.Price} />;
+          return (
+            <CartListItem
+              title={item.Name}
+              price={item.Price}
+              quantity={item.quantity}
+            />
+          );
         }}
       />
       <View style={styles.priceContainer}>
