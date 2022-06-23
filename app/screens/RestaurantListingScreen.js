@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Screen from "../components/Screen";
-import { Text, FlatList } from "react-native";
+import { FlatList } from "react-native";
 
 import AppText from "../components/AppText";
 import AppTextInput from "../components/AppTextInput";

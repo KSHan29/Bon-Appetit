@@ -57,7 +57,7 @@ function MenuScreen(props) {
   // count items in cart
 
   if (userID !== undefined) {
-    const colRef = collection(db, "Users", userID, "Cart");
+    const colRef = collection(db, "Users", userID, restaurant);
     onSnapshot(colRef, (snapshot) => {
       let temp = 0;
       snapshot.docs.forEach((doc) => {
@@ -79,7 +79,12 @@ function MenuScreen(props) {
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
           return (
-            <MenuListItem title={item.Name} price={item.Price} item={item} />
+            <MenuListItem
+              title={item.Name}
+              price={item.Price}
+              item={item}
+              restaurant={restaurant}
+            />
           );
         }}
       />

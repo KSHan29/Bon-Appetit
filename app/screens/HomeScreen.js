@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from "react-native";
+import { Alert, StyleSheet, TouchableHighlight, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -13,11 +7,12 @@ import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
 import AppTextInput from "../components/AppTextInput";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../components/firebase/firebase";
 
 function HomeScreen() {
   const navigation = useNavigation();
   const [postalCode, setPostalCode] = useState("");
-  const onPress = () => console.log(postalCode);
 
   const onNewOrder = () => {
     if (postalCode === "") {

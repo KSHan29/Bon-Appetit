@@ -15,9 +15,8 @@ import {
 } from "firebase/firestore";
 import { auth } from "./firebase/firebase";
 import { db } from "./firebase/firebase";
-function MenuListItem({ title, subTitle, price, item }) {
+function MenuListItem({ title, subTitle, price, item, restaurant }) {
   const [orderCount, setOrderCount] = useState(0);
-  const [menuItemID, setMenuItemID] = useState();
   const userID = auth.currentUser.uid;
 
   const onAddPress = () => {
@@ -32,30 +31,34 @@ function MenuListItem({ title, subTitle, price, item }) {
 
   // add items chosen to cart (stored in firestore)
   const onBasketPress = () => {
-    const docRef = doc(db, "Users", userID, "Cart", item.id);
-    getDoc(docRef).then((snapshot) => {
-      if (snapshot.data() !== undefined) {
-        const qty = snapshot.data().quantity + orderCount;
-        updateDoc(docRef, {
-          quantity: qty,
-        })
-          .then(() => {
-            setOrderCount(0);
-            alert("Added to cart.");
+    if (orderCount === 0) {
+      alert("Please add at least 1 item.");
+    } else {
+      const docRef = doc(db, "Users", userID, restaurant, item.id);
+      getDoc(docRef).then((snapshot) => {
+        if (snapshot.data() !== undefined) {
+          const qty = snapshot.data().quantity + orderCount;
+          updateDoc(docRef, {
+            quantity: qty,
           })
-          .catch((err) => console.log(err.message));
-      } else {
-        setDoc(docRef, {
-          ...item,
-          quantity: orderCount,
-        })
-          .then(() => {
-            setOrderCount(0);
-            alert("Added to cart.");
+            .then(() => {
+              setOrderCount(0);
+              alert("Added to cart.");
+            })
+            .catch((err) => console.log(err.message));
+        } else {
+          setDoc(docRef, {
+            ...item,
+            quantity: orderCount,
           })
-          .catch((err) => console.log(err.message));
-      }
-    });
+            .then(() => {
+              setOrderCount(0);
+              alert("Added to cart.");
+            })
+            .catch((err) => console.log(err.message));
+        }
+      });
+    }
   };
 
   return (
