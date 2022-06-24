@@ -22,6 +22,7 @@ function MenuScreen(props) {
   // TODO ONPRESS, ADD ITEMS TO CART
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
+  const orderID = route.params.orderID;
   let unsubCol;
   let unsubSubCol;
   //   useEffect(() => {
@@ -33,10 +34,9 @@ function MenuScreen(props) {
   const colRef = collection(db, "Restaurants");
   const q = query(colRef, where("Name", "==", restaurant));
   let docId;
-
   const navigation = useNavigation();
   const onViewCartPress = () => {
-    navigation.navigate("Cart", { postalCode, restaurant });
+    navigation.navigate("Cart", { postalCode, restaurant, orderID });
   };
 
   // count items in cart
@@ -66,6 +66,9 @@ function MenuScreen(props) {
   return (
     <Screen>
       <View style={styles.headers}>
+        <AppText style={styles.headersFont}>
+          {orderID ? "Joining Group Order" : "New Group Order"}
+        </AppText>
         <AppText style={styles.headersFont}>Address: {postalCode}</AppText>
         <AppText style={styles.headersFont}>Restaurant: {restaurant}</AppText>
       </View>

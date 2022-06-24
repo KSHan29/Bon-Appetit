@@ -1,12 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  addDoc,
-} from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc, setDoc } from "firebase/firestore";
 import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,31 +18,51 @@ function CartScreen(props) {
   const dispatch = useDispatch();
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
+  const orderID = route.params.orderID;
   const userID = auth.currentUser.uid;
 
   const navigation = useNavigation();
   const onConfirmOrderPress = () => {
-    navigation.navigate("Orders");
-    const colRef = collection(db, "Orders");
-    addDoc(colRef, {
-      status: "Pending",
-      address: postalCode,
-      name: restaurant,
-      // time:
-      // count:
-    }).then((docRef) => {
+    if (orderID === undefined) {
+      navigation.navigate("Orders");
+      const colRef = collection(db, "Orders");
+      addDoc(colRef, {
+        status: "Pending",
+        address: postalCode,
+        name: restaurant,
+        // time:
+        // count:
+      }).then((docRef) => {
+        cartItems.forEach((obj) =>
+          addDoc(collection(db, "Orders", docRef.id, userID), {
+            Name: obj.Name,
+            Price: obj.Price,
+            quantity: obj.quantity,
+          })
+        );
+        updateDoc(doc(db, "Users", userID, "Orders", userID), {
+          [docRef.id]: docRef,
+        });
+        dispatch({ type: "clearCart" });
+        navigation.popToTop();
+      });
+      console.log("order confirmed");
+    } else {
+      navigation.navigate("Orders");
       cartItems.forEach((obj) =>
-        addDoc(collection(db, "Orders", docRef.id, userID), {
+        addDoc(collection(db, "Orders", orderID, userID), {
           Name: obj.Name,
           Price: obj.Price,
           quantity: obj.quantity,
         })
       );
+      const docRef = doc(db, "Orders", orderID);
+      updateDoc(doc(db, "Users", userID, "Orders", userID), {
+        [orderID]: docRef,
+      });
       dispatch({ type: "clearCart" });
       navigation.popToTop();
-      // Need to also add some logic for keeping track of OrderID
-    });
-    console.log("order confirmed");
+    }
   };
 
   const itemArr = useSelector((store) => store[restaurant]);

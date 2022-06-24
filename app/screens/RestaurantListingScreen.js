@@ -36,6 +36,7 @@ function RestaurantListingScreen(props) {
   const navigation = useNavigation();
   const route = useRoute();
   const postalCode = route.params.postalCode;
+  const orderID = undefined;
 
   return (
     <Screen>
@@ -48,7 +49,11 @@ function RestaurantListingScreen(props) {
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
           const onPress = () =>
-            navigation.navigate("Menu", { postalCode, restaurant: item.name });
+            navigation.navigate("Menu", {
+              postalCode,
+              restaurant: item.name,
+              orderID,
+            });
           return (
             <ListItem title={item.name} image={item.image} onPress={onPress} />
           );

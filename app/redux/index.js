@@ -10,13 +10,13 @@ const rootReducer = (state = initialState, action) => {
       // return {};
       if (action.restaurant in state) {
         const foodName = action.value.Name;
-        console.log({
-          ...state,
-          [action.restaurant]: [
-            ...state[action.restaurant].filter((obj) => foodName !== obj.Name),
-            action.value,
-          ],
-        });
+        // console.log({
+        //   ...state,
+        //   [action.restaurant]: [
+        //     ...state[action.restaurant].filter((obj) => foodName !== obj.Name),
+        //     action.value,
+        //   ],
+        // });
         return {
           ...state,
           [action.restaurant]: [
@@ -25,7 +25,7 @@ const rootReducer = (state = initialState, action) => {
           ],
         };
       } else {
-        console.log({ ...state, [action.restaurant]: [action.value] });
+        // console.log({ ...state, [action.restaurant]: [action.value] });
         return { ...state, [action.restaurant]: [action.value] };
       }
     default:

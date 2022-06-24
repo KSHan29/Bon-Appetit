@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { getIdToken, createUserWithEmailAndPassword } from "firebase/auth";
 import jwtDecode from "jwt-decode";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, collection } from "firebase/firestore";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import { auth } from "../components/firebase/firebase";
@@ -45,7 +45,8 @@ function RegisterScreen() {
             Email: values["email"],
             Phone: values["phoneNumber"],
           }).catch((err) => console.log(err.message));
-          console.log(values);
+          setDoc(doc(db, "Users", userID, "Orders", userID), {});
+          // console.log(values);
         });
       })
       .catch((error) => {

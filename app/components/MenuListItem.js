@@ -15,8 +15,7 @@ import {
 
 import AppText from "./AppText";
 import colors from "../config/colors";
-import { auth } from "./firebase/firebase";
-import { db } from "./firebase/firebase";
+import { auth, db } from "./firebase/firebase";
 
 function MenuListItem({ title, subTitle, price, item, restaurant }) {
   // check if the value exist
@@ -29,6 +28,8 @@ function MenuListItem({ title, subTitle, price, item, restaurant }) {
     }
     return undefined;
   });
+  const dispatch = useDispatch();
+  const userID = auth.currentUser.uid;
   // console.log(initalValue);
 
   const [orderCount, setOrderCount] = useState(
@@ -42,8 +43,6 @@ function MenuListItem({ title, subTitle, price, item, restaurant }) {
     };
     dispatch(temp);
   }, [orderCount]);
-  const userID = auth.currentUser.uid;
-  const dispatch = useDispatch();
 
   const onAddPress = () => {
     setOrderCount((prevCount) => prevCount + 1);

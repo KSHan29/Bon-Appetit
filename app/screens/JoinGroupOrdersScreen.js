@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Text, FlatList } from "react-native";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import Screen from "../components/Screen";
@@ -68,10 +68,11 @@ function JoinGroupOrdersScreen(props) {
   //     unsubCol();
   //   };
   // }, []);
-  const colRef = collection(db, "Current Orders");
+  const colRef = collection(db, "Orders");
+  const q = query(colRef, where("status", "==", "Pending"));
 
   if (orderListings === undefined) {
-    unsubCol = onSnapshot(colRef, (snapshot) => {
+    unsubCol = onSnapshot(q, (snapshot) => {
       const temp = [];
       snapshot.docs.forEach((doc) => {
         temp.push({ id: doc.id, ...doc.data() });
@@ -94,15 +95,16 @@ function JoinGroupOrdersScreen(props) {
         renderItem={({ item }) => {
           const onPress = () =>
             navigation.navigate("Menu", {
-              postalCode: item.Destination,
-              restaurant: item.Name,
+              postalCode: item.address,
+              restaurant: item.name,
+              orderID: item.id,
             });
 
           return (
             <ListItem
-              title={item.Name}
-              subTitle={`Delivery Address: ${item.Destination}`}
-              image
+              title={item.name}
+              subTitle={`Delivery Address: ${item.address}`}
+              // image
               onPress={onPress}
             />
           );
