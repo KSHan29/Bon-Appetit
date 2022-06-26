@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Screen from "../components/Screen";
-import { FlatList } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 import AppText from "../components/AppText";
 import AppTextInput from "../components/AppTextInput";
@@ -63,7 +63,9 @@ function RestaurantListingScreen(props) {
 
   return (
     <Screen>
-      <AppText>Address: {postalCode}</AppText>
+      <View style={styles.headers}>
+        <AppText style={styles.headersFont}>Address: {postalCode}</AppText>
+      </View>
       <AppTextInput
         icon="map-search"
         placeholder="Search Restaurant"
@@ -96,5 +98,17 @@ function RestaurantListingScreen(props) {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  headersFont: {
+    fontSize: 20,
+    fontWeight: "500",
+  },
+  headers: {
+    paddingTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default RestaurantListingScreen;
