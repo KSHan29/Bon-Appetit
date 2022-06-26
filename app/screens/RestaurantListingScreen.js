@@ -7,7 +7,7 @@ import AppTextInput from "../components/AppTextInput";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "../components/firebase/firebase";
 
 // const restaurant = [
@@ -49,7 +49,7 @@ function RestaurantListingScreen(props) {
     );
   };
 
-  const colRef = collection(db, "Restaurants");
+  const colRef = query(collection(db, "Restaurants"), orderBy("Name"));
   if (restaurantListing === undefined) {
     onSnapshot(colRef, (snapshot) => {
       let restaurants = [];

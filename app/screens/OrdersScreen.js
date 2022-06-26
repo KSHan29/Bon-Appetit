@@ -45,6 +45,16 @@ function OrdersScreen(props) {
     //     console.log(err.message);
     //   });
 
+    function compare(a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }
+
     onSnapshot(docRef, (docs) => {
       const ordersObj = docs.data();
       const orderRefArr = Object.values(ordersObj);
@@ -54,6 +64,7 @@ function OrdersScreen(props) {
           const orderDoc = await getDoc(orderPath);
           temp.push({ ...orderDoc.data(), orderID: orderDoc.id });
         }
+        temp.sort(compare);
         setOrdersArr(temp);
       };
       forLoop();
