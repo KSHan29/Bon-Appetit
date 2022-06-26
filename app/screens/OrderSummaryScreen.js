@@ -21,7 +21,7 @@ import CartListItem from "../components/CartListItem";
 import colors from "../config/colors";
 import ListItemSeparator from "../components/ListItemSeparator";
 
-function OnGoingOrdersScreen(props) {
+function OrderSummaryScreen(props) {
   const route = useRoute();
   const dispatch = useDispatch();
   const postalCode = route.params.postalCode;
@@ -122,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OnGoingOrdersScreen;
+export default OrderSummaryScreen;
