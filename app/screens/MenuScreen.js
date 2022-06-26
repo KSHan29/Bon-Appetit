@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { addDoc, getDocs } from "firebase/firestore";
+import { useDispatch, useSelector } from "react-redux";
 
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
@@ -17,11 +17,12 @@ import { auth } from "../components/firebase/firebase";
 function MenuScreen(props) {
   const route = useRoute();
   const [menuItems, setMenuItems] = useState();
-  const [cartItems, setCartItems] = useState(0);
+  // const [cartItems, setCartItems] = useState();
   const userID = auth.currentUser.uid;
   // TODO ONPRESS, ADD ITEMS TO CART
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
+  const orderID = route.params.orderID;
   let unsubCol;
   let unsubSubCol;
   //   useEffect(() => {
@@ -33,11 +34,19 @@ function MenuScreen(props) {
   const colRef = collection(db, "Restaurants");
   const q = query(colRef, where("Name", "==", restaurant));
   let docId;
-
   const navigation = useNavigation();
   const onViewCartPress = () => {
-    navigation.navigate("Cart", { postalCode, restaurant });
+    navigation.navigate("Cart", { postalCode, restaurant, orderID });
   };
+
+  // count items in cart
+  const itemArr = useSelector((store) => store[restaurant]);
+  const cartItems =
+    itemArr === undefined
+      ? 0
+      : itemArr
+          .filter((obj) => obj.quantity !== 0)
+          .reduce((sum, obj) => sum + obj.quantity, 0);
 
   if (menuItems === undefined) {
     unsubCol = onSnapshot(q, (snapshot) => {
@@ -54,22 +63,12 @@ function MenuScreen(props) {
     return <AppText>Loading</AppText>;
   }
 
-  // count items in cart
-
-  if (userID !== undefined) {
-    const colRef = collection(db, "Users", userID, restaurant);
-    onSnapshot(colRef, (snapshot) => {
-      let temp = 0;
-      snapshot.docs.forEach((doc) => {
-        temp += doc.data().quantity;
-      });
-      setCartItems(temp);
-    });
-  }
-
   return (
     <Screen>
       <View style={styles.headers}>
+        <AppText style={styles.headersFont}>
+          {orderID ? "Joining Group Order" : "New Group Order"}
+        </AppText>
         <AppText style={styles.headersFont}>Address: {postalCode}</AppText>
         <AppText style={styles.headersFont}>Restaurant: {restaurant}</AppText>
       </View>
@@ -99,7 +98,7 @@ function MenuScreen(props) {
             <MaterialCommunityIcons name="cart-check" size={25} />
           </View>
 
-          <AppText>{cartItems} Items</AppText>
+          {cartItems > 0 && <AppText>{cartItems} Items</AppText>}
         </TouchableOpacity>
       </View>
     </Screen>
