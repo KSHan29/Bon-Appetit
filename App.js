@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { Provider } from "react-redux";
 
 import AuthNavigator from "./app/navigation/AuthNavigator";
 import AppNavigator from "./app/navigation/AppNavigator";
-import OrderingNavigator from "./app/navigation/OrderingNavigation";
-import TestingScreen from "./app/screens/TestingScreen";
-import JoinGroupOrdersScreen from "./app/screens/JoinGroupOrdersScreen";
 import authStorage from "./app/auth/storage";
 import AuthContext from "./app/auth/context";
+import store from "./app/redux";
 
 export default function App() {
   const [user, setUser] = useState();
@@ -23,10 +22,12 @@ export default function App() {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <NavigationContainer>
-        {user ? <AppNavigator /> : <AuthNavigator />}
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <AuthContext.Provider value={{ user, setUser }}>
+        <NavigationContainer>
+          {user ? <AppNavigator /> : <AuthNavigator />}
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </Provider>
   );
 }
