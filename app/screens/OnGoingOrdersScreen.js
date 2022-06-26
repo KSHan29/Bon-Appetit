@@ -33,8 +33,6 @@ function OnGoingOrdersScreen(props) {
 
   const navigation = useNavigation();
   if (orderItems === undefined) {
-    console.log(orderID);
-    console.log(userID);
     const colRef = collection(db, "Orders", orderID, userID);
 
     onSnapshot(colRef, (snapshot) => {

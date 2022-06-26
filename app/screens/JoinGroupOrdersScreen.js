@@ -27,7 +27,7 @@ snapshot.forEach((doc) => {
     orders.push({ ...doc.data(), id: doc.id });
   });
   console.log(orders);
-}); */
+}); 
 
 const restaurant = [
   {
@@ -55,6 +55,7 @@ const orders = [
     image: require("../assets/McDonalds-logo.png"),
   },
 ];
+*/
 
 function JoinGroupOrdersScreen(props) {
   // return <Text>hello</Text>;
@@ -121,7 +122,7 @@ function JoinGroupOrdersScreen(props) {
             <ListItem
               title={item.name}
               subTitle={`Delivery Address: ${item.address}`}
-              // image
+              image={item.image}
               onPress={onPress}
             />
           );

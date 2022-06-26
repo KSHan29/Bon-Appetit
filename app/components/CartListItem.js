@@ -5,24 +5,19 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { auth } from "./firebase/firebase";
 import AppText from "./AppText";
 import colors from "../config/colors";
-function CartListItem({ title, subTitle, quantity, price }) {
+function CartListItem({ title, subTitle, quantity, price, image }) {
   const amount = quantity * price;
 
   return (
     <>
       <View style={styles.container}>
+        {image && <Image style={styles.image} source={image} />}
         <View style={styles.detailsContainer}>
-          <AppText style={styles.title} numberOfLines={1}>
-            {title}
-          </AppText>
+          <AppText style={styles.title}>{title}</AppText>
           <AppText style={styles.subTitle} numberOfLines={1}>
             ${price}
           </AppText>
-          {subTitle && (
-            <AppText style={styles.subTitle} numberOfLines={2}>
-              {subTitle}
-            </AppText>
-          )}
+          {subTitle && <AppText style={styles.subTitle}>{subTitle}</AppText>}
         </View>
 
         <View style={styles.buttonContainer}>
