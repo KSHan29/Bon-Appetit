@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View, StyleSheet } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { onSnapshot, doc, getDoc } from "firebase/firestore";
 
 import Screen from "../components/Screen";
@@ -8,18 +8,19 @@ import { auth, db } from "../components/firebase/firebase";
 import AppText from "../components/AppText";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItem from "../components/ListItem";
+import OnGoingOrdersListItem from "../components/OnGoingOrdersListItem";
 
 function OrdersScreen(props) {
   const userID = auth.currentUser.uid;
   const [ordersArr, setOrdersArr] = useState();
   const isFocused = useIsFocused();
+  const navigation = useNavigation();
 
   useEffect(() => {
     setOrdersArr(undefined);
   }, [isFocused]);
 
   const onPress = () => {
-    //go to order summary page
     console.log("GoToOrderSummary");
   };
 
@@ -35,7 +36,7 @@ function OrdersScreen(props) {
             const orderDoc = await getDoc(orderPath);
             temp.push({ ...orderDoc.data(), orderID: orderDoc.id });
           }
-          // console.log(temp);
+          //console.log(temp);
           setOrdersArr(temp);
         };
         forLoop();
@@ -67,9 +68,11 @@ function OrdersScreen(props) {
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
           return (
-            <ListItem
-              title={item.name}
-              subTitle={item.address}
+            <OnGoingOrdersListItem
+              restaurant={item.name}
+              postalCode={item.address}
+              status={item.status}
+              orderID={item.orderID}
               onPress={onPress}
             />
           );

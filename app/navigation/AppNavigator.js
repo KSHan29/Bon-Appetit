@@ -5,6 +5,7 @@ import { HomeScreen } from "../screens";
 import OrdersScreen from "../screens/OrdersScreen";
 import AccountScreen from "../screens/AccountScreen";
 import OrderingNavigator from "./OrderingNavigation";
+import OrderSummaryNavigator from "./OrderSummaryNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,8 +22,8 @@ const AppNavigator = () => (
       }}
     />
     <Tab.Screen
-      name="Orders"
-      component={OrdersScreen}
+      name="Order History"
+      component={OrderSummaryNavigator}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="receipt" color={color} size={size} />

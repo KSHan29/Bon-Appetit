@@ -5,6 +5,7 @@ import MenuScreen from "../screens/MenuScreen";
 import RestaurantListingScreen from "../screens/RestaurantListingScreen";
 import JoinGroupOrdersScreen from "../screens/JoinGroupOrdersScreen";
 import CartScreen from "../screens/CartScreen";
+import OnGoingOrdersScreen from "../screens/OnGoingOrdersScreen";
 
 const Stack = createNativeStackNavigator();
 
