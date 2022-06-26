@@ -25,7 +25,7 @@ function CartScreen(props) {
   const navigation = useNavigation();
   const onConfirmOrderPress = () => {
     if (orderID === undefined) {
-      navigation.navigate("Orders");
+      navigation.navigate("Order History");
 
       const colRef = collection(db, "Orders");
       addDoc(colRef, {
@@ -58,7 +58,11 @@ function CartScreen(props) {
           Name: obj.Name,
           Price: obj.Price,
           quantity: obj.quantity,
+<<<<<<< HEAD
           //image: obj.image
+=======
+          image: obj.image,
+>>>>>>> b5f44d14cee89ab33430519c0f01fd74eca053d7
         })
       );
       const docRef = doc(db, "Orders", orderID);
@@ -97,7 +101,7 @@ function CartScreen(props) {
               title={item.Name}
               price={item.Price}
               quantity={item.quantity}
-              //image={{uri: item.image,}}
+              image={{ uri: item.image }}
             />
           );
         }}
