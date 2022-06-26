@@ -12,16 +12,10 @@ function OnGoingOrdersListItem({
   renderRightActions,
   status,
   orderID,
+  onPress,
 }) {
   const navigation = useNavigation();
-  const onPress = () => {
-    navigation.navigate("OnGoingOrders", {
-      restaurant,
-      postalCode,
-      status,
-      orderID,
-    });
-  };
+
   return (
     <Swipeable renderRightActions={renderRightActions}>
       <TouchableHighlight underlayColor={colors.light} onPress={onPress}>

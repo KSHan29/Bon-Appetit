@@ -20,10 +20,6 @@ function OrdersScreen(props) {
   //   setOrdersArr(undefined);
   // }, [isFocused]);
 
-  const onPress = () => {
-    console.log("GoToOrderSummary");
-  };
-
   const docRef = doc(db, "Users", userID, "Orders", userID);
   if (ordersArr === undefined) {
     // let temp = [];
@@ -94,6 +90,14 @@ function OrdersScreen(props) {
         keyExtractor={(item) => item.orderID}
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
+          const onPress = () => {
+            navigation.navigate("OnGoingOrders", {
+              restaurant: item.name,
+              postalCode: item.address,
+              status: item.status,
+              orderID: item.orderID,
+            });
+          };
           return (
             <OnGoingOrdersListItem
               image={{ uri: item.image }}
