@@ -46,7 +46,7 @@ function CartScreen() {
       alert("Please add items to your cart.");
     } else {
       if (orderID === undefined) {
-        navigation.navigate("Order History");
+        navigation.navigate("OrdersStack");
         let time = moment()
           .utcOffset("-03:00")
           .add(orderTime, "m")
@@ -77,7 +77,7 @@ function CartScreen() {
         });
         console.log("order confirmed");
       } else {
-        navigation.navigate("Orders");
+        navigation.navigate("OrdersStack");
         cartItems.forEach((obj) =>
           addDoc(collection(db, "Orders", orderID, userID), {
             Name: obj.Name,

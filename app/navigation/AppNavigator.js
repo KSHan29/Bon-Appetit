@@ -24,6 +24,7 @@ const AppNavigator = () => (
       name="OrdersStack"
       component={OrderSummaryNavigator}
       options={{
+        unmountOnBlur: true,
         tabBarLabel: "Orders",
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="receipt" color={color} size={size} />
