@@ -1,5 +1,11 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, View, FlatList, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
@@ -13,7 +19,6 @@ import colors from "../config/colors";
 import ListItem from "../components/ListItem";
 import Icon from "../components/Icon";
 import ListItemSeparator from "../components/ListItemSeparator";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../components/firebase/firebase";
 
@@ -27,6 +32,7 @@ function AccountScreen(props) {
     authStorage.removeToken();
   };
   const handleSignOut = () => {
+    console.log("test");
     signOut(auth)
       .then(() => {
         handleLogOut();
