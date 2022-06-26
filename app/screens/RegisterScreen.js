@@ -24,7 +24,10 @@ const validationSchema = Yup.object().shape({
     .oneOf([Yup.ref("password"), null], "Passwords don't match!")
     .required()
     .label("Password"),
-  phoneNumber: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
+  phoneNumber: Yup.string()
+    .required()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .label("Phone Number"),
 });
 
 function RegisterScreen() {
@@ -100,7 +103,7 @@ function RegisterScreen() {
         <AppFormField
           autoCapitalize="none"
           autoCorrect={false}
-          icon="lock"
+          icon="lock-check"
           name="confirmPassword"
           placeholder="Confirm Password"
           secureTextEntry

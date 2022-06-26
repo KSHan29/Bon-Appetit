@@ -2,8 +2,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import AccountScreen from "../screens/AccountScreen";
-import OrderingNavigator from "./OrderingNavigation";
+import OrderingNavigator from "./OrderingNavigator";
 import OrderSummaryNavigator from "./OrderSummaryNavigator";
+import AccountNavigator from "./AccountNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,18 +21,20 @@ const AppNavigator = () => (
       }}
     />
     <Tab.Screen
-      name="Order History"
+      name="OrdersStack"
       component={OrderSummaryNavigator}
       options={{
+        tabBarLabel: "Orders",
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="receipt" color={color} size={size} />
         ),
       }}
     />
     <Tab.Screen
-      name="Account"
-      component={AccountScreen}
+      name="AccountStack"
+      component={AccountNavigator}
       options={{
+        tabBarLabel: "Account",
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="account" color={color} size={size} />
         ),

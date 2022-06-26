@@ -26,13 +26,20 @@ function AccountScreen() {
     authStorage.removeToken();
   };
   const handleSignOut = () => {
-    console.log("test");
     signOut(auth)
       .then(() => {
         handleLogOut();
         console.log("signedout");
       })
       .catch((error) => alert(error.message));
+  };
+
+  const handleChangeUserInfo = () => {
+    navigation.navigate("ChangeUserInfo");
+  };
+
+  const handleChangePassword = () => {
+    navigation.navigate("ChangePassword");
   };
 
   if (userInfo === undefined) {
@@ -48,7 +55,7 @@ function AccountScreen() {
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={require("../assets/logo.jpeg")} />
+          <Image style={styles.image} source={require("../assets/logo.png")} />
         </View>
         <ListItemSeparator />
         <ListItem
@@ -58,7 +65,7 @@ function AccountScreen() {
         />
       </View>
       <ListItemSeparator />
-      <TouchableOpacity onPress={() => console.log("Change User Info")}>
+      <TouchableOpacity onPress={handleChangeUserInfo}>
         <View style={styles.logOutContainer}>
           <View style={styles.iconContainer}>
             <Icon name="account-check" backgroundColor={colors.secondary} />
@@ -67,7 +74,7 @@ function AccountScreen() {
         </View>
       </TouchableOpacity>
       <ListItemSeparator />
-      <TouchableOpacity onPress={() => console.log("Change Password")}>
+      <TouchableOpacity onPress={handleChangePassword}>
         <View style={styles.logOutContainer}>
           <View style={styles.iconContainer}>
             <Icon
