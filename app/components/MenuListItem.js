@@ -45,7 +45,12 @@ function MenuListItem({ title, subTitle, price, image, restaurant }) {
     const temp = {
       type: "updateCart",
       restaurant: restaurant,
-      value: { Name: title, Price: price, quantity: orderCount },
+      value: {
+        Name: title,
+        Price: price,
+        quantity: orderCount,
+        image: image.uri,
+      },
     };
     dispatch(temp);
   }, [orderCount]);
