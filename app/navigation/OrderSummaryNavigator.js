@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { OrdersScreen } from "../screens";
-import OnGoingOrdersScreen from "../screens/OnGoingOrdersScreen";
+import OrderSummaryScreen from "../screens/OrderSummaryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +14,7 @@ const OrderSummaryNavigator = () => (
     />
     <Stack.Screen
       name="OnGoingOrders"
-      component={OnGoingOrdersScreen}
+      component={OrderSummaryScreen}
       options={{ headerTitle: "Order Summary" }}
     />
   </Stack.Navigator>
