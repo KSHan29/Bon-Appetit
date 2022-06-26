@@ -61,8 +61,16 @@ function JoinGroupOrdersScreen(props) {
   const navigation = useNavigation();
   const route = useRoute();
   const [orderListings, setOrderListings] = useState();
+  const [filterListings, setFilterListings] = useState();
   const postalCode = route.params.postalCode;
   let unsubCol;
+  const changeText = (newText) => {
+    setFilterListings(
+      orderListings.filter((obj) =>
+        obj.name.toLowerCase().startsWith(newText.toLowerCase())
+      )
+    );
+  };
   // useEffect(() => {
   //   return () => {
   //     unsubCol();
@@ -77,7 +85,12 @@ function JoinGroupOrdersScreen(props) {
       snapshot.docs.forEach((doc) => {
         temp.push({ id: doc.id, ...doc.data() });
       });
-      setOrderListings(temp);
+      // setOrderListings(temp);
+
+      // Filter by address
+      const temp1 = temp.filter((obj) => obj.address === postalCode);
+      setOrderListings(temp1);
+      setFilterListings(temp1);
     });
     return <AppText>Loading</AppText>;
   }
@@ -86,10 +99,14 @@ function JoinGroupOrdersScreen(props) {
     <Screen>
       <AppText>Address: {postalCode}</AppText>
 
-      <AppTextInput icon="map-search" placeholder="Search"></AppTextInput>
+      <AppTextInput
+        icon="map-search"
+        placeholder="Search Restaurant"
+        onChangeText={changeText}
+      ></AppTextInput>
 
       <FlatList
-        data={orderListings}
+        data={filterListings}
         keyExtractor={(listing) => listing.id.toString()}
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
