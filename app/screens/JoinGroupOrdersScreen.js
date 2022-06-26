@@ -121,7 +121,7 @@ function JoinGroupOrdersScreen(props) {
             <ListItem
               title={item.name}
               subTitle={`Delivery Address: ${item.address}`}
-              image={item.image}
+              image={{ uri: item.image }}
               onPress={onPress}
             />
           );

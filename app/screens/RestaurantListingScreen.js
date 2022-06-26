@@ -38,10 +38,15 @@ function RestaurantListingScreen(props) {
   const navigation = useNavigation();
   const route = useRoute();
   const [restaurantListing, setRestaurantListing] = useState();
+  const [filterListings, setFilterListings] = useState();
   const postalCode = route.params.postalCode;
   const orderID = undefined;
   const changeText = (newText) => {
-    console.log("test");
+    setFilterListings(
+      restaurantListing.filter((obj) =>
+        obj.Name.toLowerCase().startsWith(newText.toLowerCase())
+      )
+    );
   };
 
   const colRef = collection(db, "Restaurants");
@@ -52,6 +57,7 @@ function RestaurantListingScreen(props) {
         restaurants.push({ ...doc.data(), id: doc.id });
       });
       setRestaurantListing(restaurants);
+      setFilterListings(restaurants);
     });
   }
 
@@ -65,7 +71,7 @@ function RestaurantListingScreen(props) {
       ></AppTextInput>
 
       <FlatList
-        data={restaurantListing}
+        data={filterListings}
         keyExtractor={(listing) => listing.id.toString()}
         ItemSeparatorComponent={ListItemSeparator}
         renderItem={({ item }) => {
