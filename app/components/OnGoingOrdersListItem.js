@@ -7,21 +7,15 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 function OnGoingOrdersListItem({
   restaurant,
-  postalCode,
+  time,
   image,
   renderRightActions,
   status,
   orderID,
+  onPress,
 }) {
   const navigation = useNavigation();
-  const onPress = () => {
-    navigation.navigate("OnGoingOrders", {
-      restaurant,
-      postalCode,
-      status,
-      orderID,
-    });
-  };
+
   return (
     <Swipeable renderRightActions={renderRightActions}>
       <TouchableHighlight underlayColor={colors.light} onPress={onPress}>
@@ -29,13 +23,13 @@ function OnGoingOrdersListItem({
           {image && <Image style={styles.image} source={image} />}
           <View style={styles.detailsContainer}>
             <AppText style={styles.title}>{restaurant}</AppText>
-            {postalCode && (
-              <AppText style={styles.subTitle}>
-                Postal Code: {postalCode}
-              </AppText>
-            )}
             {status && (
               <AppText style={styles.subTitle}>Status: {status}</AppText>
+            )}
+            {time && (
+              <AppText style={styles.subTitle}>
+                Close Order Time: {time}
+              </AppText>
             )}
           </View>
         </View>

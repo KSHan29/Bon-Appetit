@@ -11,6 +11,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import ScrollPicker from "react-native-wheel-scrollview-picker";
+import moment from "moment";
 
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
@@ -23,7 +24,7 @@ import ListItemSeparator from "../components/ListItemSeparator";
 function CartScreen() {
   const route = useRoute();
   const dispatch = useDispatch();
-  const [orderTime, setOrderTime] = useState();
+  const [orderTime, setOrderTime] = useState(10);
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
   const restaurantImage = route.params.restaurantImage;
@@ -46,7 +47,10 @@ function CartScreen() {
     } else {
       if (orderID === undefined) {
         navigation.navigate("Order History");
-
+        let time = moment()
+          .utcOffset("-03:00")
+          .add(orderTime, "m")
+          .format("LT");
         const colRef = collection(db, "Orders");
         addDoc(colRef, {
           status: "Pending",
@@ -55,7 +59,7 @@ function CartScreen() {
           image: restaurantImage,
           count: 1,
           deliveryFee: (deliveryFee / count).toFixed(2),
-          closeOrderAt: orderTime,
+          closeOrderAt: time,
         }).then((docRef) => {
           cartItems.forEach((obj) =>
             addDoc(collection(db, "Orders", docRef.id, userID), {
@@ -153,13 +157,7 @@ function CartScreen() {
             return <AppText>{data}</AppText>;
           }}
           onValueChange={(data, selectedIndex) => {
-            let hour = new Date().getHours();
-            let min = new Date().getMinutes();
-            let time = hour.toString() + " " + min.toString();
-            // let clock = moment().utcOffset("+08:00").format("hh:mm");
-            // console.log(time);
-            // console.log(clock);
-            setOrderTime(time);
+            setOrderTime(data);
           }}
           wrapperHeight={75}
           // wrapperWidth={20}
