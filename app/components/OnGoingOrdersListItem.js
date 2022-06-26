@@ -9,7 +9,6 @@ function OnGoingOrdersListItem({
   restaurant,
   postalCode,
   image,
-  IconComponent,
   renderRightActions,
   status,
   orderID,
@@ -27,7 +26,6 @@ function OnGoingOrdersListItem({
     <Swipeable renderRightActions={renderRightActions}>
       <TouchableHighlight underlayColor={colors.light} onPress={onPress}>
         <View style={styles.container}>
-          {IconComponent}
           {image && <Image style={styles.image} source={image} />}
           <View style={styles.detailsContainer}>
             <AppText style={styles.title}>{restaurant}</AppText>

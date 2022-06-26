@@ -87,7 +87,9 @@ function MenuScreen(props) {
             <MenuListItem
               title={item.Name}
               price={item.Price}
-              item={item}
+              image={{
+                uri: item.image,
+              }}
               restaurant={restaurant}
             />
           );

@@ -69,6 +69,7 @@ function OrdersScreen(props) {
         renderItem={({ item }) => {
           return (
             <OnGoingOrdersListItem
+              image={item.image}
               restaurant={item.name}
               postalCode={item.address}
               status={item.status}

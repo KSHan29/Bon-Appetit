@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, TouchableHighlight, Button } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableHighlight,
+  Button,
+  Image,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,7 +23,7 @@ import AppText from "./AppText";
 import colors from "../config/colors";
 import { auth, db } from "./firebase/firebase";
 
-function MenuListItem({ title, subTitle, price, item, restaurant }) {
+function MenuListItem({ title, subTitle, price, image, restaurant }) {
   // check if the value exist
   let initalValue = useSelector((state) => {
     if (state[restaurant]) {
@@ -57,18 +63,13 @@ function MenuListItem({ title, subTitle, price, item, restaurant }) {
   return (
     <>
       <View style={styles.container}>
+        {image && <Image style={styles.image} source={image} />}
         <View style={styles.detailsContainer}>
-          <AppText style={styles.title} numberOfLines={1}>
-            {title}
-          </AppText>
+          <AppText style={styles.title}>{title}</AppText>
           <AppText style={styles.subTitle} numberOfLines={1}>
             ${price}
           </AppText>
-          {subTitle && (
-            <AppText style={styles.subTitle} numberOfLines={2}>
-              {subTitle}
-            </AppText>
-          )}
+          {subTitle && <AppText style={styles.subTitle}>{subTitle}</AppText>}
         </View>
 
         <View style={styles.buttonContainer}>
@@ -86,18 +87,17 @@ function MenuListItem({ title, subTitle, price, item, restaurant }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    padding: 15,
-    backgroundColor: colors.white,
-    alignItems: "center",
-  },
   buttonContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   counter: {
     paddingHorizontal: 10,
+  },
+  container: {
+    flexDirection: "row",
+    padding: 15,
+    backgroundColor: colors.white,
   },
   detailsContainer: {
     flex: 1,
