@@ -22,6 +22,7 @@ function MenuScreen(props) {
   // TODO ONPRESS, ADD ITEMS TO CART
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
+  const restaurantImage = route.params.restaurantImage;
   const orderID = route.params.orderID;
   let unsubCol;
   let unsubSubCol;
@@ -36,7 +37,12 @@ function MenuScreen(props) {
   let docId;
   const navigation = useNavigation();
   const onViewCartPress = () => {
-    navigation.navigate("Cart", { postalCode, restaurant, orderID });
+    navigation.navigate("Cart", {
+      postalCode,
+      restaurant,
+      restaurantImage,
+      orderID,
+    });
   };
 
   // count items in cart

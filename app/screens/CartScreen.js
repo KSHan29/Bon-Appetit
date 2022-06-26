@@ -18,6 +18,7 @@ function CartScreen(props) {
   const dispatch = useDispatch();
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
+  const restaurantImage = route.params.restaurantImage;
   const orderID = route.params.orderID;
   const userID = auth.currentUser.uid;
 
@@ -25,11 +26,13 @@ function CartScreen(props) {
   const onConfirmOrderPress = () => {
     if (orderID === undefined) {
       navigation.navigate("Orders");
+
       const colRef = collection(db, "Orders");
       addDoc(colRef, {
         status: "Pending",
         address: postalCode,
         name: restaurant,
+        image: restaurantImage,
         // time:
         // count:
       }).then((docRef) => {

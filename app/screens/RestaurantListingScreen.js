@@ -73,6 +73,7 @@ function RestaurantListingScreen(props) {
             navigation.navigate("Menu", {
               postalCode,
               restaurant: item.Name,
+              restaurantImage: item.image,
               orderID,
             });
           return (
