@@ -71,6 +71,7 @@ function OrderSummaryScreen(props) {
               title={item.Name}
               price={item.Price}
               quantity={item.quantity}
+              image={{ uri: item.image }}
             />
           );
         }}

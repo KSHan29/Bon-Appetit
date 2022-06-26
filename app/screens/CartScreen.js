@@ -24,53 +24,53 @@ function CartScreen(props) {
 
   const navigation = useNavigation();
   const onConfirmOrderPress = () => {
-    if (orderID === undefined) {
-      navigation.navigate("Order History");
+    if (cartItems.length === 0) {
+      alert("Please add items to your cart.");
+    } else {
+      if (orderID === undefined) {
+        navigation.navigate("Order History");
 
-      const colRef = collection(db, "Orders");
-      addDoc(colRef, {
-        status: "Pending",
-        address: postalCode,
-        name: restaurant,
-        image: restaurantImage,
-        // time:
-        // count:
-      }).then((docRef) => {
+        const colRef = collection(db, "Orders");
+        addDoc(colRef, {
+          status: "Pending",
+          address: postalCode,
+          name: restaurant,
+          image: restaurantImage,
+          // time:
+          // count:
+        }).then((docRef) => {
+          cartItems.forEach((obj) =>
+            addDoc(collection(db, "Orders", docRef.id, userID), {
+              Name: obj.Name,
+              Price: obj.Price,
+              quantity: obj.quantity,
+              image: obj.image,
+            })
+          );
+          updateDoc(doc(db, "Users", userID, "Orders", userID), {
+            [docRef.id]: docRef,
+          });
+          dispatch({ type: "clearCart" });
+          navigation.popToTop();
+        });
+        console.log("order confirmed");
+      } else {
+        navigation.navigate("Orders");
         cartItems.forEach((obj) =>
-          addDoc(collection(db, "Orders", docRef.id, userID), {
+          addDoc(collection(db, "Orders", orderID, userID), {
             Name: obj.Name,
             Price: obj.Price,
             quantity: obj.quantity,
-            //image: obj.image,
+            image: obj.image,
           })
         );
+        const docRef = doc(db, "Orders", orderID);
         updateDoc(doc(db, "Users", userID, "Orders", userID), {
-          [docRef.id]: docRef,
+          [orderID]: docRef,
         });
         dispatch({ type: "clearCart" });
         navigation.popToTop();
-      });
-      console.log("order confirmed");
-    } else {
-      navigation.navigate("Orders");
-      cartItems.forEach((obj) =>
-        addDoc(collection(db, "Orders", orderID, userID), {
-          Name: obj.Name,
-          Price: obj.Price,
-          quantity: obj.quantity,
-<<<<<<< HEAD
-          //image: obj.image
-=======
-          image: obj.image,
->>>>>>> b5f44d14cee89ab33430519c0f01fd74eca053d7
-        })
-      );
-      const docRef = doc(db, "Orders", orderID);
-      updateDoc(doc(db, "Users", userID, "Orders", userID), {
-        [orderID]: docRef,
-      });
-      dispatch({ type: "clearCart" });
-      navigation.popToTop();
+      }
     }
   };
 
