@@ -16,7 +16,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../components/firebase/firebase";
 import LoadingScreen from "./LoadingScreen";
 
-function AccountScreen(props) {
+function AccountScreen() {
   const { user, setUser } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState();
   const navigation = useNavigation();

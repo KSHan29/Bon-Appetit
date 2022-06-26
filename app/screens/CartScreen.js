@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc, getDoc } from "firebase/firestore";
 import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,8 +21,17 @@ function CartScreen() {
   const restaurantImage = route.params.restaurantImage;
   const orderID = route.params.orderID;
   const userID = auth.currentUser.uid;
+  const deliveryFee = 5;
+  const [count, setCount] = useState(1);
 
   const navigation = useNavigation();
+  if (orderID !== undefined) {
+    const docRef = doc(db, "Orders", orderID);
+    getDoc(docRef).then((snapshot) => {
+      const num = snapshot.data().count + 1;
+      setCount(num);
+    });
+  }
   const onConfirmOrderPress = () => {
     if (cartItems.length === 0) {
       alert("Please add items to your cart.");
@@ -36,8 +45,9 @@ function CartScreen() {
           address: postalCode,
           name: restaurant,
           image: restaurantImage,
+          count: 1,
+          deliveryFee: (deliveryFee / count).toFixed(2),
           // time:
-          // count:
         }).then((docRef) => {
           cartItems.forEach((obj) =>
             addDoc(collection(db, "Orders", docRef.id, userID), {
@@ -67,6 +77,13 @@ function CartScreen() {
         const docRef = doc(db, "Orders", orderID);
         updateDoc(doc(db, "Users", userID, "Orders", userID), {
           [orderID]: docRef,
+        });
+        getDoc(docRef).then((snapshot) => {
+          const num = snapshot.data().count + 1;
+          updateDoc(docRef, {
+            count: num,
+            deliveryFee: (deliveryFee / count).toFixed(2),
+          });
         });
         dispatch({ type: "clearCart" });
         navigation.popToTop();
@@ -107,9 +124,14 @@ function CartScreen() {
         }}
       />
       <View style={styles.priceContainer}>
-        <AppText>Subtotal: ${totalCost}</AppText>
-        <AppText>Delivery Fee: $5</AppText>
-        <AppText>Total Price: ${totalCost + 5}</AppText>
+        <AppText>No. of users in group order: {count}</AppText>
+        <AppText>
+          Subtotal: ${totalCost ? totalCost.toFixed(2) : totalCost}
+        </AppText>
+        <AppText>Delivery Fee: ${(deliveryFee / count).toFixed(2)}</AppText>
+        <AppText>
+          Total Price: ${(totalCost + deliveryFee / count).toFixed(2)}
+        </AppText>
       </View>
       <TouchableOpacity
         style={styles.cartButton}

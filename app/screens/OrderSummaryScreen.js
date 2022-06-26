@@ -1,12 +1,13 @@
 import { useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import { FlatList, View, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
 
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import { db } from "../components/firebase/firebase";
+import { getDoc } from "firebase/firestore";
 import { auth } from "../components/firebase/firebase";
 import CartListItem from "../components/CartListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -20,6 +21,7 @@ function OrderSummaryScreen() {
   const orderID = route.params.orderID;
   const userID = auth.currentUser.uid;
   const [orderItems, setOrderItems] = useState();
+  const [deliveryFee, setDeliveryFee] = useState();
 
   if (orderItems === undefined) {
     const colRef = collection(db, "Orders", orderID, userID);
@@ -30,6 +32,13 @@ function OrderSummaryScreen() {
         temp.push({ ...doc.data(), id: doc.id });
       });
       setOrderItems(temp);
+    });
+
+    const docRef = doc(db, "Orders", orderID);
+
+    getDoc(docRef).then((snapshot) => {
+      const num = Number(snapshot.data().deliveryFee);
+      setDeliveryFee(num);
     });
   }
 
@@ -66,9 +75,11 @@ function OrderSummaryScreen() {
         }}
       />
       <View style={styles.priceContainer}>
-        <AppText>Subtotal: ${totalCost}</AppText>
-        <AppText>Delivery Fee: $5</AppText>
-        <AppText>Total Price: ${totalCost + 5}</AppText>
+        <AppText>
+          Subtotal: ${totalCost ? totalCost.toFixed(2) : totalCost}
+        </AppText>
+        <AppText>Delivery Fee: ${deliveryFee}</AppText>
+        <AppText>Total Price: ${totalCost + deliveryFee}</AppText>
       </View>
       {/* <TouchableOpacity
         style={styles.cartButton}
