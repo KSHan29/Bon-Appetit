@@ -1,9 +1,16 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { collection, doc, addDoc, updateDoc, getDoc } from "firebase/firestore";
-import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
+import ScrollPicker from "react-native-wheel-scrollview-picker";
 
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
@@ -16,6 +23,7 @@ import ListItemSeparator from "../components/ListItemSeparator";
 function CartScreen() {
   const route = useRoute();
   const dispatch = useDispatch();
+  const [orderTime, setOrderTime] = useState();
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
   const restaurantImage = route.params.restaurantImage;
@@ -47,7 +55,7 @@ function CartScreen() {
           image: restaurantImage,
           count: 1,
           deliveryFee: (deliveryFee / count).toFixed(2),
-          // time:
+          closeOrderAt: orderTime,
         }).then((docRef) => {
           cartItems.forEach((obj) =>
             addDoc(collection(db, "Orders", docRef.id, userID), {
@@ -123,6 +131,46 @@ function CartScreen() {
           );
         }}
       />
+      <View style={styles.deliveryTimeContainer}>
+        <AppText>Wait </AppText>
+        {/* <View style={{ width: 100, height: "100%" }}> */}
+        <ScrollPicker
+          dataSource={[
+            "10",
+            "15",
+            "20",
+            "25",
+            "30",
+            "35",
+            "40",
+            "45",
+            "50",
+            "55",
+            "60",
+          ]}
+          selectedIndex={1}
+          renderItem={(data, index) => {
+            return <AppText>{data}</AppText>;
+          }}
+          onValueChange={(data, selectedIndex) => {
+            let hour = new Date().getHours();
+            let min = new Date().getMinutes();
+            let time = hour.toString() + " " + min.toString();
+            // let clock = moment().utcOffset("+08:00").format("hh:mm");
+            // console.log(time);
+            // console.log(clock);
+            setOrderTime(time);
+          }}
+          wrapperHeight={75}
+          // wrapperWidth={20}
+          wrapperColor="#FFFFFF"
+          itemHeight={25}
+          highlightColor="#d8d8d8"
+          highlightBorderWidth={2}
+        />
+        {/* </View> */}
+        <AppText> min for others to join order</AppText>
+      </View>
       <View style={styles.priceContainer}>
         <AppText>No. of users in group order: {count}</AppText>
         <AppText>
@@ -162,6 +210,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "400",
   },
+  deliveryTimeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: 20,
+    paddingHorizontal: 20,
+  },
   headers: {
     justifyContent: "center",
     alignItems: "center",
@@ -172,6 +226,7 @@ const styles = StyleSheet.create({
   },
   priceContainer: {
     padding: 20,
+    paddingTop: 15,
   },
 });
 

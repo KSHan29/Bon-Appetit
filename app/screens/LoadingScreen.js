@@ -8,7 +8,7 @@ function LoadingScreen() {
   return (
     <View style={styles.container}>
       <AppText style={styles.loading}>Loading</AppText>
-      <MaterialCommunityIcons name="reload" color={colors.black} size="80" />
+      <MaterialCommunityIcons name="reload" color={colors.black} size={80} />
     </View>
   );
 }
