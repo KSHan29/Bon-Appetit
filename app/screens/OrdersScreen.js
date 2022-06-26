@@ -98,7 +98,7 @@ function OrdersScreen(props) {
             <OnGoingOrdersListItem
               image={{ uri: item.image }}
               restaurant={item.name}
-              postalCode={item.address}
+              time={item.closeOrderAt}
               status={item.status}
               orderID={item.orderID}
               onPress={onPress}
