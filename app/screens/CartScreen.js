@@ -41,6 +41,7 @@ function CartScreen(props) {
             Name: obj.Name,
             Price: obj.Price,
             quantity: obj.quantity,
+            //image: obj.image,
           })
         );
         updateDoc(doc(db, "Users", userID, "Orders", userID), {
@@ -57,6 +58,7 @@ function CartScreen(props) {
           Name: obj.Name,
           Price: obj.Price,
           quantity: obj.quantity,
+          //image: obj.image
         })
       );
       const docRef = doc(db, "Orders", orderID);
@@ -95,6 +97,7 @@ function CartScreen(props) {
               title={item.Name}
               price={item.Price}
               quantity={item.quantity}
+              //image={{uri: item.image,}}
             />
           );
         }}
