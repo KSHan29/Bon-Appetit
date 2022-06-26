@@ -1,26 +1,20 @@
 import React, { useContext, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
 import Screen from "../components/Screen";
 import { auth } from "../components/firebase/firebase";
 import AppText from "../components/AppText";
-import AppButton from "../components/AppButton";
 import authStorage from "../auth/storage";
 import AuthContext from "../auth/context";
 import colors from "../config/colors";
 import ListItem from "../components/ListItem";
 import Icon from "../components/Icon";
 import ListItemSeparator from "../components/ListItemSeparator";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../components/firebase/firebase";
+import LoadingScreen from "./LoadingScreen";
 
 function AccountScreen(props) {
   const { user, setUser } = useContext(AuthContext);
@@ -47,7 +41,7 @@ function AccountScreen(props) {
     getDoc(docRef).then((doc) => {
       setUserInfo(doc.data());
     });
-    return <AppText>Loading</AppText>;
+    return <LoadingScreen />;
   }
 
   return (

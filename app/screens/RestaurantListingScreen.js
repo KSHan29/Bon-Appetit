@@ -10,31 +10,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "../components/firebase/firebase";
 
-// const restaurant = [
-//   {
-//     id: 1,
-//     name: "McDonald's - Bedok Mall",
-//     image: require("../assets/McDonalds-logo.png"),
-//   },
-//   {
-//     id: 2,
-//     name: "KFC",
-//     image: require("../assets/KFC-logo.png"),
-//   },
-//   {
-//     id: 3,
-//     name: "WingStop",
-//     image: require("../assets/Wingstop-logo.png"),
-//   },
-//   {
-//     id: 4,
-//     name: "Subway",
-//     image: require("../assets/Subway-logo.png"),
-//   },
-// ];
-
 // maybe create new list item for restaurant then can change the search icon also
-function RestaurantListingScreen(props) {
+function RestaurantListingScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const [restaurantListing, setRestaurantListing] = useState();

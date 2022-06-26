@@ -7,6 +7,7 @@ import AppNavigator from "./app/navigation/AppNavigator";
 import authStorage from "./app/auth/storage";
 import AuthContext from "./app/auth/context";
 import store from "./app/redux";
+import LoadingScreen from "./app/screens/LoadingScreen";
 
 export default function App() {
   const [user, setUser] = useState();

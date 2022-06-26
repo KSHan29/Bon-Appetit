@@ -9,12 +9,12 @@ import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import { db } from "../components/firebase/firebase";
 import MenuListItem from "../components/MenuListItem";
-import AppButton from "../components/AppButton";
 import ListItemSeparator from "../components/ListItemSeparator";
 import colors from "../config/colors";
 import { auth } from "../components/firebase/firebase";
+import LoadingScreen from "./LoadingScreen";
 
-function MenuScreen(props) {
+function MenuScreen() {
   const route = useRoute();
   const [menuItems, setMenuItems] = useState();
   // const [cartItems, setCartItems] = useState();
@@ -66,7 +66,7 @@ function MenuScreen(props) {
         setMenuItems(temp);
       });
     });
-    return <AppText>Loading</AppText>;
+    return <LoadingScreen />;
   }
 
   return (

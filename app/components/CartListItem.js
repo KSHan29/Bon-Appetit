@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, Image } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { auth } from "./firebase/firebase";
 import AppText from "./AppText";
 import colors from "../config/colors";
+
 function CartListItem({ title, subTitle, quantity, price, image }) {
   const amount = quantity * price;
 

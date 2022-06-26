@@ -7,8 +7,6 @@ import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
 import AppTextInput from "../components/AppTextInput";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../components/firebase/firebase";
 
 function HomeScreen() {
   const navigation = useNavigation();

@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { collection, doc, addDoc, updateDoc, setDoc } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
 import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ import CartListItem from "../components/CartListItem";
 import colors from "../config/colors";
 import ListItemSeparator from "../components/ListItemSeparator";
 
-function CartScreen(props) {
+function CartScreen() {
   const route = useRoute();
   const dispatch = useDispatch();
   const postalCode = route.params.postalCode;

@@ -7,7 +7,7 @@ import Screen from "../components/Screen";
 import { auth, db } from "../components/firebase/firebase";
 import AppText from "../components/AppText";
 import ListItemSeparator from "../components/ListItemSeparator";
-import ListItem from "../components/ListItem";
+import LoadingScreen from "../screens/LoadingScreen";
 import OnGoingOrdersListItem from "../components/OnGoingOrdersListItem";
 
 function OrdersScreen(props) {
@@ -81,7 +81,7 @@ function OrdersScreen(props) {
     // });
     // console.log("test2");
 
-    return <Screen>{/* <AppText>Loading</AppText> */}</Screen>;
+    return <LoadingScreen />;
   }
 
   return (

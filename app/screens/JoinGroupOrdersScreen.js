@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -9,8 +9,9 @@ import AppText from "../components/AppText";
 import AppTextInput from "../components/AppTextInput";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
+import LoadingScreen from "./LoadingScreen";
 
-function JoinGroupOrdersScreen(props) {
+function JoinGroupOrdersScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const [orderListings, setOrderListings] = useState();
@@ -45,7 +46,7 @@ function JoinGroupOrdersScreen(props) {
       setOrderListings(temp1);
       setFilterListings(temp1);
     });
-    return <AppText>Loading</AppText>;
+    return <LoadingScreen />;
   }
 
   return (
