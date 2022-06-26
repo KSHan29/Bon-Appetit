@@ -14,6 +14,7 @@ import colors from "../config/colors";
 function ListItem({
   title,
   subTitle,
+  phoneNumber,
   image,
   IconComponent,
   onPress,
@@ -28,6 +29,9 @@ function ListItem({
           <View style={styles.detailsContainer}>
             <AppText style={styles.title}>{title}</AppText>
             {subTitle && <AppText style={styles.subTitle}>{subTitle}</AppText>}
+            {phoneNumber && (
+              <AppText style={styles.subTitle}>{phoneNumber}</AppText>
+            )}
           </View>
         </View>
       </TouchableHighlight>

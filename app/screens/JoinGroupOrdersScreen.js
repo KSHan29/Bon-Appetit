@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, FlatList } from "react-native";
+import { Text, FlatList, StyleSheet, View } from "react-native";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -10,55 +10,7 @@ import AppTextInput from "../components/AppTextInput";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 
-/* const colRef = collection(db, "Current Orders");
-let snapshot = await db
-  .collection("current Orders")
-  .doc("15fwTj5O8GaSkZuJPQWW")
-  .collection("User")
-  .get();
-
-snapshot.forEach((doc) => {
-  console.log(doc.data());
-}); */
-
-/* getDocs(colRef).then((snapshot) => {
-  let orders = [];
-  snapshot.docs.forEach((doc) => {
-    orders.push({ ...doc.data(), id: doc.id });
-  });
-  console.log(orders);
-}); 
-
-const restaurant = [
-  {
-    id: 1,
-    name: "McDonald's - Bedok Mall",
-    image: require("../assets/McDonalds-logo.png"),
-  },
-  {
-    id: 2,
-    name: "KFC",
-    image: require("../assets/McDonalds-logo.png"),
-  },
-  {
-    id: 3,
-    name: "Burger King",
-    image: require("../assets/McDonalds-logo.png"),
-  },
-];
-
-const orders = [
-  {
-    id: 1,
-    postalCode: 123456,
-    name: "McDonald's - Bedok Mall",
-    image: require("../assets/McDonalds-logo.png"),
-  },
-];
-*/
-
 function JoinGroupOrdersScreen(props) {
-  // return <Text>hello</Text>;
   const navigation = useNavigation();
   const route = useRoute();
   const [orderListings, setOrderListings] = useState();
@@ -98,7 +50,9 @@ function JoinGroupOrdersScreen(props) {
 
   return (
     <Screen>
-      <AppText>Address: {postalCode}</AppText>
+      <View style={styles.headers}>
+        <AppText style={styles.headersFont}>Address: {postalCode}</AppText>
+      </View>
 
       <AppTextInput
         icon="map-search"
@@ -131,5 +85,17 @@ function JoinGroupOrdersScreen(props) {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  headersFont: {
+    fontSize: 20,
+    fontWeight: "500",
+  },
+  headers: {
+    paddingTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default JoinGroupOrdersScreen;
