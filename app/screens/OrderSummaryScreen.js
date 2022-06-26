@@ -22,6 +22,7 @@ function OrderSummaryScreen() {
   const userID = auth.currentUser.uid;
   const [orderItems, setOrderItems] = useState();
   const [deliveryFee, setDeliveryFee] = useState();
+  const [usersCount, setUsersCount] = useState();
 
   if (orderItems === undefined) {
     const colRef = collection(db, "Orders", orderID, userID);
@@ -39,6 +40,8 @@ function OrderSummaryScreen() {
     getDoc(docRef).then((snapshot) => {
       const num = Number(snapshot.data().deliveryFee);
       setDeliveryFee(num);
+      const count = Number(snapshot.data().count);
+      setUsersCount(count);
     });
   }
 
@@ -75,6 +78,7 @@ function OrderSummaryScreen() {
         }}
       />
       <View style={styles.priceContainer}>
+        <AppText>No. of users in group order: {usersCount}</AppText>
         <AppText>
           Subtotal: ${totalCost ? totalCost.toFixed(2) : totalCost}
         </AppText>
