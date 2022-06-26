@@ -16,9 +16,9 @@ function OrdersScreen(props) {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
 
-  useEffect(() => {
-    setOrdersArr(undefined);
-  }, [isFocused]);
+  // useEffect(() => {
+  //   setOrdersArr(undefined);
+  // }, [isFocused]);
 
   const onPress = () => {
     console.log("GoToOrderSummary");
@@ -26,36 +26,52 @@ function OrdersScreen(props) {
 
   const docRef = doc(db, "Users", userID, "Orders", userID);
   if (ordersArr === undefined) {
-    let temp = [];
-    getDoc(docRef)
-      .then((docs) => {
-        const ordersObj = docs.data();
-        const orderRefArr = Object.values(ordersObj);
-        const forLoop = async () => {
-          for (const orderPath of orderRefArr) {
-            const orderDoc = await getDoc(orderPath);
-            temp.push({ ...orderDoc.data(), orderID: orderDoc.id });
-          }
-          //console.log(temp);
-          setOrdersArr(temp);
-        };
-        forLoop();
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    // let temp = [];
+    // getDoc(docRef)
+    //   .then((docs) => {
+    //     const ordersObj = docs.data();
+    //     const orderRefArr = Object.values(ordersObj);
+    //     const forLoop = async () => {
+    //       for (const orderPath of orderRefArr) {
+    //         const orderDoc = await getDoc(orderPath);
+    //         temp.push({ ...orderDoc.data(), orderID: orderDoc.id });
+    //       }
+    //       //console.log(temp);
+    //       setOrdersArr(temp);
+    //     };
+    //     forLoop();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.message);
+    //   });
+
+    onSnapshot(docRef, (docs) => {
+      const ordersObj = docs.data();
+      const orderRefArr = Object.values(ordersObj);
+      const forLoop = async () => {
+        let temp = [];
+        for (const orderPath of orderRefArr) {
+          const orderDoc = await getDoc(orderPath);
+          temp.push({ ...orderDoc.data(), orderID: orderDoc.id });
+        }
+        setOrdersArr(temp);
+      };
+      forLoop();
+    });
+
+    // onSnapshot(docRef, (docs) => {
+    //   const ordersObj = docs.data();
+    //   const orderRefArr = Object.values(ordersObj);
+    //   orderRefArr.forEach((orderPath) => {
+    //     onSnapshot(orderPath, (orderDoc) => {
+    //       temp.push({ ...orderDoc.data(), orderID: orderDoc.id });
+    //     });
+    //   });
+    // });
+    // console.log("test2");
+
     return <Screen>{/* <AppText>Loading</AppText> */}</Screen>;
   }
-  // onSnapshot(docRef, (docs) => {
-  //   const ordersObj = docs.data();
-  //   const orderRefArr = Object.values(ordersObj);
-  //   orderRefArr.forEach((orderPath) => {
-  //     onSnapshot(orderPath, (orderDoc) => {
-  //       temp.push({ ...orderDoc.data(), orderID: orderDoc.id });
-  //     });
-  //   });
-  // });
-  // console.log("test2");
 
   return (
     <Screen>
