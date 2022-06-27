@@ -9,7 +9,7 @@ function LoadingScreen() {
     <View style={styles.container}>
       <AppText style={styles.loading}>Loading</AppText>
       <MaterialCommunityIcons name="reload" color={colors.black} size={80} />
-      <ActivityIndicator size="large" />
+      {/* <ActivityIndicator size="large" /> */}
     </View>
   );
 }

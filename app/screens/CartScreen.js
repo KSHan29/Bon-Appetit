@@ -135,40 +135,44 @@ function CartScreen() {
           );
         }}
       />
-      <View style={styles.deliveryTimeContainer}>
-        <AppText>Wait </AppText>
-        {/* <View style={{ width: 100, height: "100%" }}> */}
-        <ScrollPicker
-          dataSource={[
-            "10",
-            "15",
-            "20",
-            "25",
-            "30",
-            "35",
-            "40",
-            "45",
-            "50",
-            "55",
-            "60",
-          ]}
-          selectedIndex={1}
-          renderItem={(data, index) => {
-            return <AppText>{data}</AppText>;
-          }}
-          onValueChange={(data, selectedIndex) => {
-            setOrderTime(data);
-          }}
-          wrapperHeight={75}
-          // wrapperWidth={20}
-          wrapperColor="#FFFFFF"
-          itemHeight={25}
-          highlightColor="#d8d8d8"
-          highlightBorderWidth={2}
-        />
-        {/* </View> */}
-        <AppText> min for others to join order</AppText>
-      </View>
+      {!orderID && (
+        <View style={styles.deliveryTimeContainer}>
+          <AppText>Wait </AppText>
+          {/* <View style={{ width: 100, height: "100%" }}> */}
+
+          <ScrollPicker
+            dataSource={[
+              "10",
+              "15",
+              "20",
+              "25",
+              "30",
+              "35",
+              "40",
+              "45",
+              "50",
+              "55",
+              "60",
+            ]}
+            selectedIndex={1}
+            renderItem={(data, index) => {
+              return <AppText>{data}</AppText>;
+            }}
+            onValueChange={(data, selectedIndex) => {
+              setOrderTime(data);
+            }}
+            wrapperHeight={75}
+            // wrapperWidth={20}
+            wrapperColor="#FFFFFF"
+            itemHeight={25}
+            highlightColor="#d8d8d8"
+            highlightBorderWidth={2}
+          />
+
+          {/* </View> */}
+          <AppText> min for others to join order</AppText>
+        </View>
+      )}
       <View style={styles.priceContainer}>
         <AppText>No. of users in group order: {count}</AppText>
         <AppText>
