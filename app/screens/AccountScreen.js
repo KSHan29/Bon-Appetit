@@ -35,7 +35,7 @@ function AccountScreen() {
   };
 
   const handleChangeUserInfo = () => {
-    navigation.navigate("ChangeUserInfo");
+    navigation.navigate("ChangeUserInfo", { setUserInfo });
   };
 
   const handleChangePassword = () => {

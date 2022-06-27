@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import { auth } from "../components/firebase/firebase";
@@ -25,6 +25,8 @@ const validationSchema = Yup.object().shape({
 });
 
 function ChangeUserInfoScreen() {
+  const route = useRoute();
+  const setUserInfo = route.params.setUserInfo;
   const userID = auth.currentUser.uid;
   const handleChangeSubmit = (values) => {
     const docRef = doc(db, "Users", userID);
@@ -34,6 +36,7 @@ function ChangeUserInfoScreen() {
     })
       .then(() => {
         alert("Updated.");
+        setUserInfo();
       })
       .catch((err) => console.log(err));
   };
