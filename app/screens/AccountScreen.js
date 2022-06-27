@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
 import Screen from "../components/Screen";
 import { auth } from "../components/firebase/firebase";
@@ -20,12 +21,14 @@ function AccountScreen() {
   const { user, setUser } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const userID = auth.currentUser.uid;
   const handleLogOut = () => {
     setUser(null);
     authStorage.removeToken();
   };
   const handleSignOut = () => {
+    dispatch({ type: "clearCart" });
     signOut(auth)
       .then(() => {
         handleLogOut();
