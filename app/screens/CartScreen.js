@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +34,21 @@ function CartScreen() {
   const deliveryFee = 5;
   const [count, setCount] = useState(1);
 
+  const threeButtonAlert = () =>
+    Alert.alert("Choose payment method", "", [
+      {
+        text: "Cash",
+        onPress: () => console.log(),
+      },
+      {
+        text: "Credit card",
+        onPress: () => console.log(),
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log(),
+      },
+    ]);
   const navigation = useNavigation();
   if (orderID !== undefined) {
     const docRef = doc(db, "Orders", orderID);
@@ -45,61 +61,75 @@ function CartScreen() {
     if (cartItems.length === 0) {
       alert("Please add items to your cart.");
     } else {
-      if (orderID === undefined) {
-        navigation.navigate("OrdersStack");
-        let time = moment()
-          .utcOffset("-03:00")
-          .add(orderTime, "m")
-          .format("LT");
-        const colRef = collection(db, "Orders");
-        addDoc(colRef, {
-          status: "Pending",
-          address: postalCode,
-          name: restaurant,
-          image: restaurantImage,
-          count: 1,
-          deliveryFee: (deliveryFee / count).toFixed(2),
-          closeOrderAt: time,
-        }).then((docRef) => {
-          cartItems.forEach((obj) =>
-            addDoc(collection(db, "Orders", docRef.id, userID), {
-              Name: obj.Name,
-              Price: obj.Price,
-              quantity: obj.quantity,
-              image: obj.image,
-            })
-          );
-          updateDoc(doc(db, "Users", userID, "Orders", userID), {
-            [docRef.id]: docRef,
-          });
-          dispatch({ type: "clearCart" });
-          navigation.popToTop();
-        });
-        console.log("order confirmed");
-      } else {
-        navigation.navigate("OrdersStack");
-        cartItems.forEach((obj) =>
-          addDoc(collection(db, "Orders", orderID, userID), {
-            Name: obj.Name,
-            Price: obj.Price,
-            quantity: obj.quantity,
-            image: obj.image,
-          })
-        );
-        const docRef = doc(db, "Orders", orderID);
-        updateDoc(doc(db, "Users", userID, "Orders", userID), {
-          [orderID]: docRef,
-        });
-        getDoc(docRef).then((snapshot) => {
-          const num = snapshot.data().count + 1;
-          updateDoc(docRef, {
-            count: num,
-            deliveryFee: (deliveryFee / count).toFixed(2),
-          });
-        });
-        dispatch({ type: "clearCart" });
-        navigation.popToTop();
-      }
+      Alert.alert("Choose payment method", "", [
+        {
+          text: "Cash",
+          onPress: () => console.log(),
+        },
+        {
+          text: "Credit card",
+          onPress: () => console.log(),
+        },
+        {
+          text: "Cancel",
+          onPress: () => console.log(),
+        },
+      ]);
+      // if (orderID === undefined) {
+      //   navigation.navigate("OrdersStack");
+      //   let time = moment()
+      //     .utcOffset("-03:00")
+      //     .add(orderTime, "m")
+      //     .format("LT");
+      //   const colRef = collection(db, "Orders");
+      //   addDoc(colRef, {
+      //     status: "Pending",
+      //     address: postalCode,
+      //     name: restaurant,
+      //     image: restaurantImage,
+      //     count: 1,
+      //     deliveryFee: (deliveryFee / count).toFixed(2),
+      //     closeOrderAt: time,
+      //   }).then((docRef) => {
+      //     cartItems.forEach((obj) =>
+      //       addDoc(collection(db, "Orders", docRef.id, userID), {
+      //         Name: obj.Name,
+      //         Price: obj.Price,
+      //         quantity: obj.quantity,
+      //         image: obj.image,
+      //       })
+      //     );
+      //     updateDoc(doc(db, "Users", userID, "Orders", userID), {
+      //       [docRef.id]: docRef,
+      //     });
+      //     dispatch({ type: "clearCart" });
+      //     navigation.popToTop();
+      //   });
+      //   console.log("order confirmed");
+      // } else {
+      //   navigation.navigate("OrdersStack");
+      //   cartItems.forEach((obj) =>
+      //     addDoc(collection(db, "Orders", orderID, userID), {
+      //       Name: obj.Name,
+      //       Price: obj.Price,
+      //       quantity: obj.quantity,
+      //       image: obj.image,
+      //     })
+      //   );
+      //   const docRef = doc(db, "Orders", orderID);
+      //   updateDoc(doc(db, "Users", userID, "Orders", userID), {
+      //     [orderID]: docRef,
+      //   });
+      //   getDoc(docRef).then((snapshot) => {
+      //     const num = snapshot.data().count + 1;
+      //     updateDoc(docRef, {
+      //       count: num,
+      //       deliveryFee: (deliveryFee / count).toFixed(2),
+      //     });
+      //   });
+      //   dispatch({ type: "clearCart" });
+      //   navigation.popToTop();
+      // }
     }
   };
 
