@@ -41,6 +41,10 @@ function AccountScreen() {
     navigation.navigate("ChangeUserInfo", { setUserInfo });
   };
 
+  const handleSetPayment = () => {
+    navigation.navigate("SetPayment");
+  };
+
   const handleChangePassword = () => {
     navigation.navigate("ChangePassword");
   };
@@ -86,6 +90,15 @@ function AccountScreen() {
             />
           </View>
           <AppText style={styles.logOut}>Change Password</AppText>
+        </View>
+      </TouchableOpacity>
+      <ListItemSeparator />
+      <TouchableOpacity onPress={handleSetPayment}>
+        <View style={styles.logOutContainer}>
+          <View style={styles.iconContainer}>
+            <Icon name="credit-card" backgroundColor={colors.dark} />
+          </View>
+          <AppText style={styles.logOut}>Set Payment Method</AppText>
         </View>
       </TouchableOpacity>
       <ListItemSeparator />

@@ -16,6 +16,7 @@ import authStorage from "../auth/storage";
 // validation checks for inputs
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const digitsOnly = (value) => /^\d+$/.test(value);
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
@@ -27,7 +28,8 @@ const validationSchema = Yup.object().shape({
   phoneNumber: Yup.string()
     .required()
     .matches(phoneRegExp, "Phone number is not valid")
-    .label("Phone Number"),
+    .label("Phone Number")
+    .test("Digits only", "The field should have digits only", digitsOnly),
 });
 
 function RegisterScreen() {
