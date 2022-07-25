@@ -85,7 +85,7 @@ function SetPaymentScreen() {
         <AppFormField
           autoCapitalize="none"
           autoCorrect={false}
-          icon="person"
+          icon="account"
           name="name"
           placeholder="Name"
           textContentType="givenName"
@@ -104,7 +104,7 @@ function SetPaymentScreen() {
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="number-pad"
-          icon="date"
+          icon="calendar-month"
           name="expiryYear"
           placeholder="Expiry year"
           width="100%"
