@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +34,21 @@ function CartScreen() {
   const deliveryFee = 5;
   const [count, setCount] = useState(1);
 
+  const threeButtonAlert = () =>
+    Alert.alert("Choose payment method", "", [
+      {
+        text: "Cash",
+        onPress: () => console.log(),
+      },
+      {
+        text: "Credit card",
+        onPress: () => console.log(),
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log(),
+      },
+    ]);
   const navigation = useNavigation();
   if (orderID !== undefined) {
     const docRef = doc(db, "Orders", orderID);
@@ -45,8 +61,17 @@ function CartScreen() {
     if (cartItems.length === 0) {
       alert("Please add items to your cart.");
     } else {
+      Alert.alert("Choose payment method", "", [
+        {
+          text: "Cash",
+          onPress: () => console.log(),
+        },
+        {
+          text: "Credit card",
+          onPress: () => console.log(),
+        },
+      ]);
       if (orderID === undefined) {
-        alert("Payment by ");
         navigation.navigate("OrdersStack");
         let time = moment()
           .utcOffset("-03:00")
@@ -78,7 +103,6 @@ function CartScreen() {
         });
         console.log("order confirmed");
       } else {
-        alert("Payment by ");
         navigation.navigate("OrdersStack");
         cartItems.forEach((obj) =>
           addDoc(collection(db, "Orders", orderID, userID), {
