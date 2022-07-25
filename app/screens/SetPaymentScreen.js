@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { useFormik } from "formik";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
@@ -51,79 +51,85 @@ function SetPaymentScreen() {
   const user = auth.currentUser;
   const userID = user.uid;
 
-  const handleChangeSubmit = (values) => {};
-  const formik = useFormik({
-    initialValues: {
-      creditCard: "",
-    },
-    validationSchema,
-    onSubmit: () => console.log("."),
-  });
-  const creditCard = formik.getFieldMeta("creditCard");
+  const handleChangeSubmit = (values) => {
+    alert("Default Payment added");
+    const docRef = doc(db, "Users", userID);
+    updateDoc(docRef, { CreditCard: "True" });
+  };
+  // const formik = useFormik({
+  //   initialValues: {
+  //     creditCard: "",
+  //   },
+  //   validationSchema,
+  //   onSubmit: () => console.log("."),
+  // });
+  // const creditCard = formik.getFieldMeta("creditCard");
 
   return (
     <Screen style={styles.container}>
-      <AppForm
-        initialValues={{
-          cardNumber: "",
-          name: "",
-          expiryMonth: "",
-          expiryYear: "",
-          securityCode: "",
-        }}
-        onSubmit={handleChangeSubmit}
-        validationSchema={validationSchema}
-      >
-        <AppFormField
-          keyboardType="number-pad"
-          icon="credit-card"
-          name="cardNumber"
-          placeholder="Card number"
-          textContentType="creditCardNumber"
-          width="100%"
-        />
-        <AppFormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="account"
-          name="name"
-          placeholder="Name"
-          textContentType="givenName"
-          width="100%"
-        />
-        <AppFormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="number-pad"
-          icon="calendar-month"
-          name="expiryMonth"
-          placeholder="Expiry month"
-          width="100%"
-        />
-        <AppFormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="number-pad"
-          icon="calendar-month"
-          name="expiryYear"
-          placeholder="Expiry year"
-          width="100%"
-        />
-        <AppFormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="number-pad"
-          icon="lock-check"
-          name="securityCode"
-          placeholder="Security Code"
-          secureTextEntry
-          textContentType="password"
-          width="100%"
-        />
-        <View style={styles.buttons}>
-          <SubmitButton title="Update" />
-        </View>
-      </AppForm>
+      <ScrollView style={styles.scroll}>
+        <AppForm
+          initialValues={{
+            cardNumber: "",
+            name: "",
+            expiryMonth: "",
+            expiryYear: "",
+            securityCode: "",
+          }}
+          onSubmit={handleChangeSubmit}
+          validationSchema={validationSchema}
+        >
+          <AppFormField
+            keyboardType="number-pad"
+            icon="credit-card"
+            name="cardNumber"
+            placeholder="Card number"
+            textContentType="creditCardNumber"
+            width="100%"
+          />
+          <AppFormField
+            autoCapitalize="none"
+            autoCorrect={false}
+            icon="account"
+            name="name"
+            placeholder="Name"
+            textContentType="givenName"
+            width="100%"
+          />
+          <AppFormField
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="number-pad"
+            icon="calendar-month"
+            name="expiryMonth"
+            placeholder="Expiry month"
+            width="100%"
+          />
+          <AppFormField
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="number-pad"
+            icon="calendar-month"
+            name="expiryYear"
+            placeholder="Expiry year"
+            width="100%"
+          />
+          <AppFormField
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="number-pad"
+            icon="lock-check"
+            name="securityCode"
+            placeholder="Security Code"
+            secureTextEntry
+            textContentType="password"
+            width="100%"
+          />
+          <View style={styles.buttons}>
+            <SubmitButton title="Update" />
+          </View>
+        </AppForm>
+      </ScrollView>
     </Screen>
   );
 }
@@ -131,7 +137,6 @@ function SetPaymentScreen() {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    padding: "10%",
     width: "100%",
     justifyContent: "center",
   },
@@ -142,6 +147,10 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 40,
+  },
+  scroll: {
+    width: "100%",
+    padding: "10%",
   },
 });
 

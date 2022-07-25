@@ -49,6 +49,7 @@ function RegisterScreen() {
             Name: values["name"],
             Email: values["email"],
             Phone: values["phoneNumber"],
+            CreditCard: "False",
           }).catch((err) => console.log(err.message));
           setDoc(doc(db, "Users", userID, "Orders", userID), {});
           // console.log(values);

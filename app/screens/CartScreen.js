@@ -46,6 +46,7 @@ function CartScreen() {
       alert("Please add items to your cart.");
     } else {
       if (orderID === undefined) {
+        alert("Payment by ");
         navigation.navigate("OrdersStack");
         let time = moment()
           .utcOffset("-03:00")
@@ -77,6 +78,7 @@ function CartScreen() {
         });
         console.log("order confirmed");
       } else {
+        alert("Payment by ");
         navigation.navigate("OrdersStack");
         cartItems.forEach((obj) =>
           addDoc(collection(db, "Orders", orderID, userID), {
