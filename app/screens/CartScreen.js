@@ -25,7 +25,7 @@ import ListItemSeparator from "../components/ListItemSeparator";
 function CartScreen() {
   const route = useRoute();
   const dispatch = useDispatch();
-  const [orderTime, setOrderTime] = useState(10);
+  const [orderTime, setOrderTime] = useState(15);
   const postalCode = route.params.postalCode;
   const restaurant = route.params.restaurant;
   const restaurantImage = route.params.restaurantImage;
@@ -63,7 +63,7 @@ function CartScreen() {
   const helper = () => {
     if (orderID === undefined) {
       navigation.navigate("OrdersStack");
-      let time = moment().utcOffset("-03:00").add(orderTime, "m").format("LT");
+      let time = moment().utcOffset("+08:00").add(orderTime, "m").format("LT");
       const colRef = collection(db, "Orders");
       addDoc(colRef, {
         status: "Pending",
