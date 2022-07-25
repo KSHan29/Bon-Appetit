@@ -33,20 +33,22 @@ function CartScreen() {
   const userID = auth.currentUser.uid;
   const deliveryFee = 5;
   const [count, setCount] = useState(1);
+  const [condition, setCondition] = useState(false);
 
-  const threeButtonAlert = () =>
+  const docRef = doc(db, "Users", userID);
+  getDoc(docRef).then((snapshot) => {
+    setCondition(snapshot.data().CreditCard);
+  });
+
+  const paymentAlert = () =>
     Alert.alert("Choose payment method", "", [
       {
         text: "Cash",
-        onPress: () => console.log(),
+        onPress: () => helper(),
       },
       {
         text: "Credit card",
-        onPress: () => console.log(),
-      },
-      {
-        text: "Cancel",
-        onPress: () => console.log(),
+        onPress: () => helper(),
       },
     ]);
   const navigation = useNavigation();
@@ -57,75 +59,131 @@ function CartScreen() {
       setCount(num);
     });
   }
-  const onConfirmOrderPress = () => {
-    if (cartItems.length === 0) {
-      alert("Please add items to your cart.");
-    } else {
-      Alert.alert("Choose payment method", "", [
-        {
-          text: "Cash",
-          onPress: () => console.log(),
-        },
-        {
-          text: "Credit card",
-          onPress: () => console.log(),
-        },
-      ]);
-      if (orderID === undefined) {
-        navigation.navigate("OrdersStack");
-        let time = moment()
-          .utcOffset("-03:00")
-          .add(orderTime, "m")
-          .format("LT");
-        const colRef = collection(db, "Orders");
-        addDoc(colRef, {
-          status: "Pending",
-          address: postalCode,
-          name: restaurant,
-          image: restaurantImage,
-          count: 1,
-          deliveryFee: (deliveryFee / count).toFixed(2),
-          closeOrderAt: time,
-        }).then((docRef) => {
-          cartItems.forEach((obj) =>
-            addDoc(collection(db, "Orders", docRef.id, userID), {
-              Name: obj.Name,
-              Price: obj.Price,
-              quantity: obj.quantity,
-              image: obj.image,
-            })
-          );
-          updateDoc(doc(db, "Users", userID, "Orders", userID), {
-            [docRef.id]: docRef,
-          });
-          dispatch({ type: "clearCart" });
-          navigation.popToTop();
-        });
-        console.log("order confirmed");
-      } else {
-        navigation.navigate("OrdersStack");
+
+  const helper = () => {
+    if (orderID === undefined) {
+      navigation.navigate("OrdersStack");
+      let time = moment().utcOffset("-03:00").add(orderTime, "m").format("LT");
+      const colRef = collection(db, "Orders");
+      addDoc(colRef, {
+        status: "Pending",
+        address: postalCode,
+        name: restaurant,
+        image: restaurantImage,
+        count: 1,
+        deliveryFee: (deliveryFee / count).toFixed(2),
+        closeOrderAt: time,
+      }).then((docRef) => {
         cartItems.forEach((obj) =>
-          addDoc(collection(db, "Orders", orderID, userID), {
+          addDoc(collection(db, "Orders", docRef.id, userID), {
             Name: obj.Name,
             Price: obj.Price,
             quantity: obj.quantity,
             image: obj.image,
           })
         );
-        const docRef = doc(db, "Orders", orderID);
         updateDoc(doc(db, "Users", userID, "Orders", userID), {
-          [orderID]: docRef,
-        });
-        getDoc(docRef).then((snapshot) => {
-          const num = snapshot.data().count + 1;
-          updateDoc(docRef, {
-            count: num,
-            deliveryFee: (deliveryFee / count).toFixed(2),
-          });
+          [docRef.id]: docRef,
         });
         dispatch({ type: "clearCart" });
         navigation.popToTop();
+      });
+      console.log("order confirmed");
+    } else {
+      navigation.navigate("OrdersStack");
+      cartItems.forEach((obj) =>
+        addDoc(collection(db, "Orders", orderID, userID), {
+          Name: obj.Name,
+          Price: obj.Price,
+          quantity: obj.quantity,
+          image: obj.image,
+        })
+      );
+      const docRef = doc(db, "Orders", orderID);
+      updateDoc(doc(db, "Users", userID, "Orders", userID), {
+        [orderID]: docRef,
+      });
+      getDoc(docRef).then((snapshot) => {
+        const num = snapshot.data().count + 1;
+        updateDoc(docRef, {
+          count: num,
+          deliveryFee: (deliveryFee / count).toFixed(2),
+        });
+      });
+      dispatch({ type: "clearCart" });
+      navigation.popToTop();
+    }
+  };
+
+  const onConfirmOrderPress = () => {
+    if (cartItems.length === 0) {
+      alert("Please add items to your cart.");
+    } else {
+      if (condition) {
+        paymentAlert();
+      } else {
+        Alert.alert("Payment by cash", "", [
+          {
+            text: "Ok",
+            onPress: () => helper(),
+          },
+        ]);
       }
+      // if (orderID === undefined) {
+      //   navigation.navigate("OrdersStack");
+      //   let time = moment()
+      //     .utcOffset("-03:00")
+      //     .add(orderTime, "m")
+      //     .format("LT");
+      //   const colRef = collection(db, "Orders");
+      //   addDoc(colRef, {
+      //     status: "Pending",
+      //     address: postalCode,
+      //     name: restaurant,
+      //     image: restaurantImage,
+      //     count: 1,
+      //     deliveryFee: (deliveryFee / count).toFixed(2),
+      //     closeOrderAt: time,
+      //   }).then((docRef) => {
+      //     cartItems.forEach((obj) =>
+      //       addDoc(collection(db, "Orders", docRef.id, userID), {
+      //         Name: obj.Name,
+      //         Price: obj.Price,
+      //         quantity: obj.quantity,
+      //         image: obj.image,
+      //       })
+      //     );
+      //     updateDoc(doc(db, "Users", userID, "Orders", userID), {
+      //       [docRef.id]: docRef,
+      //     });
+      //     dispatch({ type: "clearCart" });
+      //     navigation.popToTop();
+      //   });
+      //   console.log("order confirmed");
+      // } else {
+      //   navigation.navigate("OrdersStack");
+      //   cartItems.forEach((obj) =>
+      //     addDoc(collection(db, "Orders", orderID, userID), {
+      //       Name: obj.Name,
+      //       Price: obj.Price,
+      //       quantity: obj.quantity,
+      //       image: obj.image,
+      //     })
+      //   );
+      //   const docRef = doc(db, "Orders", orderID);
+      //   updateDoc(doc(db, "Users", userID, "Orders", userID), {
+      //     [orderID]: docRef,
+      //   });
+      //   getDoc(docRef).then((snapshot) => {
+      //     const num = snapshot.data().count + 1;
+      //     updateDoc(docRef, {
+      //       count: num,
+      //       deliveryFee: (deliveryFee / count).toFixed(2),
+      //     });
+      //   });
+      //   dispatch({ type: "clearCart" });
+      //   navigation.popToTop();
+      // }
     }
   };
 

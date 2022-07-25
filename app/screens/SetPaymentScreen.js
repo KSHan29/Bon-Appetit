@@ -54,7 +54,7 @@ function SetPaymentScreen() {
   const handleChangeSubmit = (values) => {
     alert("Default Payment added");
     const docRef = doc(db, "Users", userID);
-    updateDoc(docRef, { CreditCard: "True" });
+    updateDoc(docRef, { CreditCard: true });
   };
   // const formik = useFormik({
   //   initialValues: {
